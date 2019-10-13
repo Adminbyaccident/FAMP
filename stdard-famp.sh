@@ -73,3 +73,8 @@ expect eof
 ")
 
 echo "$SECURE_MYSQL"
+
+## References in the following URLs:
+
+## https://www.adminbyaccident.com/freebsd/how-to-install-famp-stack/
+## https://www.digitalocean.com/community/tutorials/how-to-install-an-apache-mysql-and-php-famp-stack-on-freebsd-12-0
