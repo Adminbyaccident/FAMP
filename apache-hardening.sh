@@ -83,7 +83,7 @@ gsed -i '183i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/et
 
 # 5.- Secure headers
 echo '<IfModule mod_headers.c>' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Content-Security-Policy "default-src 'self'; upgrade-insecure-requests;"' >> /usr/local/etc/apache24/httpd.conf
+echo '  Header set Content-Security-Policy "upgrade-insecure-requests;"' >> /usr/local/etc/apache24/httpd.conf
 echo '  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"' >> /usr/local/etc/apache24/httpd.conf
 echo '  Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"' >> /usr/local/etc/apache24/httpd.conf
 echo '  Header set X-Content-Type-Options "nosniff"' >> /usr/local/etc/apache24/httpd.conf
