@@ -70,9 +70,9 @@ sed -i -e '/mod_socache_shmcb.so/s/#LoadModule/LoadModule/' /usr/local/etc/apach
 sed -i -e '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
 
 # 4.6.2- Adding the redirection rules.
-gsed -i '182i\RewriteEngine On' /usr/local/etc/apache24/httpd.conf
-gsed -i '183i\RewriteCond %{HTTPS}  !=on' /usr/local/etc/apache24/httpd.conf
-gsed -i '184i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/etc/apache24/httpd.conf
+gsed -i '181i\RewriteEngine On' /usr/local/etc/apache24/httpd.conf
+gsed -i '182i\RewriteCond %{HTTPS}  !=on' /usr/local/etc/apache24/httpd.conf
+gsed -i '183i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/etc/apache24/httpd.conf
 
 # 5.- Secure headers
 echo '<IfModule mod_headers.c>' >> /usr/local/etc/apache24/httpd.conf
