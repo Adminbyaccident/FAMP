@@ -90,9 +90,9 @@ echo '</IfModule>' >> /usr/local/etc/apache24/httpd.conf
 echo 'TraceEnable off' >> /usr/local/etc/apache24/httpd.conf
 
 # 7.- Allow specific HTTP methods.
-gsed -i '270i\	<LimitExcept GET POST HEAD>' /usr/local/etc/apache24/httpd.conf
-gsed -i '271i\       deny from all' /usr/local/etc/apache24/httpd.conf
-gsed -i '272i\    </LimitExcept>' /usr/local/etc/apache24/httpd.conf
+gsed -i '269i\    <LimitExcept GET POST HEAD>' /usr/local/etc/apache24/httpd.conf
+gsed -i '270i\       deny from all' /usr/local/etc/apache24/httpd.conf
+gsed -i '271i\    </LimitExcept>' /usr/local/etc/apache24/httpd.conf
 
 # 8.- Restart Apache HTTP so changes take effect.
 service apache24 restart
