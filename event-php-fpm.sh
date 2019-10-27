@@ -45,7 +45,7 @@ sed -i -e '/mod_proxy_fcgi.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24
 sysrc php_fpm_enable="YES"
 
 # Create configuration file for Apache HTTP to 'speak' PHP
-tocuh /usr/local/etc/apache24/modules.d/003_php-fpm.conf
+touch /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
 # Add the configuration into the file
 echo '<IfModule proxy_fcgi_module>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
