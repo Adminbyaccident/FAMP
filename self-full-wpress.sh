@@ -260,6 +260,11 @@ cp -r /root/wordpress/* /usr/local/www/apache24/data
 # Change the ownership of the DocumentRoot path content from root to the Apache HTTP user (named www)
 chown -R www:www /usr/local/www/apache24/data
 
+# Preventive services restart
+service apache24 restart
+service php-fpm restart
+service mysql-server restart
+
 # Actions on the CLI are now finished.
 echo 'Actions on the CLI are now finished. Please visit the ip/domain of the site with a browser and proceed with the install'
 
