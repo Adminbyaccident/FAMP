@@ -103,3 +103,30 @@ gsed -i '271i\    </LimitExcept>' /usr/local/etc/apache24/httpd.conf
 
 # 8.- Restart Apache HTTP so changes take effect.
 service apache24 restart
+
+# 9.- Install mod_evasive
+pkg install -y ap24-mod_evasive
+
+# 9.1- Enable the mod_evasive module in Apache HTTP
+sed -i -e '/mod_evasive20.so/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# 9.2- Configure the mod_evasive module
+touch /usr/local/etc/apache24/modules.d/020-mod_evasive.conf
+
+echo "<IfModule mod_evasive20.c>
+	DOSHashTableSize 3097
+	DOSPageCount 20
+	DOSSiteCount 50
+	DOSPageInterval 1
+	DOSSiteInterval 1
+	DOSBlockingPeriod 360
+	DOSEmailNotify youremail@address.com
+	DOSSystemCommand “su – root -c /sbin/ipfw add 50000 deny %s to any in”
+	DOSLogDir “/var/log/mod_evasive”
+</IfModule>" >> /usr/local/etc/apache24/modules.d/020-mod_evasive.conf
+
+# 9.4- Restart Apache for the configuration to take effect
+apachectl graceful
+
+## References:
+## https://www.adminbyaccident.com/security/how-to-harden-apache-http/
