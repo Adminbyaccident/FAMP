@@ -128,5 +128,23 @@ echo "<IfModule mod_evasive20.c>
 # 9.4- Restart Apache for the configuration to take effect
 apachectl graceful
 
+# 10.- Install Modsecurity 3 for Apache HTTP
+pkg install -y modsecurity3-apache
+
+# Clonde with Git SpiderLab Rules >> OWASP ModSecurity Core Rule Set
+pkg install -y git
+git clone https://github.com/SpiderLabs/owasp-modsecurity-crs
+cp /usr/local/etc/modsecurity/owasp-modsecurity-crs/crs-setup.conf.example /usr/local/etc/modsecurity/crs-setup.conf
+
+# Configure ModSecurity3's module
+touch /usr/local/etc/apache24/modules.d/280_mod_security.conf
+echo '<IfModule security3_module>' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf
+echo '	modsecurity on' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf
+echo '	modsecurity_rules_file /usr/local/etc/modsecurity/crs-setup.conf' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf
+echo '</IfModule>' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf 
+
+# Restart Apache HTTP
+apachectl restart
+
 ## References:
 ## https://www.adminbyaccident.com/security/how-to-harden-apache-http/
