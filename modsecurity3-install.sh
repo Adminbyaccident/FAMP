@@ -14,6 +14,7 @@ pkg install -y modsecurity3-apache
 pkg install -y git
 git clone https://github.com/SpiderLabs/owasp-modsecurity-crs
 cp /usr/local/etc/modsecurity/owasp-modsecurity-crs/crs-setup.conf.example /usr/local/etc/modsecurity/crs-setup.conf
+sed -ip 's/SecRuleEngine DetectionOnly/SecRuleEngine On/g' /usr/local/etc/modsecurity/modsecurity.conf
 
 # Configure ModSecurity3's module
 touch /usr/local/etc/apache24/modules.d/280_mod_security.conf
