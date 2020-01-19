@@ -25,7 +25,7 @@ pkg install -y php73 php73-mysqli mod_php73 php73-extensions
 pkg install -y expect
 
 # Create configuration file for Apache HTTP to 'speak' PHP
-tocuh /usr/local/etc/apache24/modules.d/001_mod-php.conf
+touch /usr/local/etc/apache24/modules.d/001_mod-php.conf
 
 # Add the configuration into the file
 echo '<IfModule dir_module>' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
