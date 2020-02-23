@@ -148,3 +148,4 @@ apachectl restart
 
 ## References:
 ## https://www.adminbyaccident.com/security/how-to-harden-apache-http/
+## https://www.digitalocean.com/community/tutorials/recommended-steps-to-harden-apache-http-on-freebsd-12-0
