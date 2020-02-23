@@ -274,4 +274,5 @@ echo 'Actions on the CLI are now finished. Please visit the ip/domain of the sit
 ## https://www.digitalocean.com/community/tutorials/how-to-configure-apache-http-with-mpm-event-and-php-fpm-on-freebsd-12-0
 ## https://www.adminbyaccident.com/freebsd/how-to-install-famp-stack/
 ## https://www.adminbyaccident.com/security/how-to-harden-apache-http/
+## https://www.digitalocean.com/community/tutorials/recommended-steps-to-harden-apache-http-on-freebsd-12-0
 ## https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-set-apaches-mpm-event-and-php-fpm-on-freebsd/
