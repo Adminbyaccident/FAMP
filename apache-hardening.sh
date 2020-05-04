@@ -139,10 +139,11 @@ cp /usr/local/etc/modsecurity/owasp-modsecurity-crs/crs-setup.conf.example /usr/
 
 # Configure ModSecurity3's module
 touch /usr/local/etc/apache24/modules.d/280_mod_security.conf
-echo '<IfModule security3_module>' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf
-echo '	modsecurity on' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf
-echo '	modsecurity_rules_file /usr/local/etc/modsecurity/crs-setup.conf' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf
-echo '</IfModule>' >> /usr/local/etc/apache24/modules.d/280_mod_security.conf 
+echo " 
+<IfModule security3_module>
+    modsecurity on
+    modsecurity_rules_file /usr/local/etc/modsecurity/crs-setup.conf
+</IfModule>" >> /usr/local/etc/apache24/modules.d/280_mod_security.conf 
 
 # Restart Apache HTTP
 apachectl restart
