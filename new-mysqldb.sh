@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
 # Create a database inside MySQL version 8 using Expect
 
 # Install Expect
