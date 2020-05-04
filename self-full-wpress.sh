@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This is a full Wordpress install on:
-# FreeBSD 12 + Apache 2.4 latest pkg + MySQL 8 + PHP 7.3
+# FreeBSD 12 + Apache 2.4 latest pkg + MySQL 8 + PHP 7.4
 # Apache HTTP is set on MPM Event and PHP-FPM
 # Certificate is self signed
 # Change ServerName, DB name, usernames, etc to your needs.
@@ -25,8 +25,8 @@ pkg install -y mysql80-server
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.3 and its 'funny' dependencies
-pkg install -y php73 php73-mysqli php73-extensions
+# Install PHP 7.4 and its 'funny' dependencies
+pkg install -y php74 php74-mysqli php74-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
@@ -54,14 +54,15 @@ sysrc php_fpm_enable="YES"
 touch /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
 # Add the configuration into the file
-echo '<IfModule proxy_fcgi_module>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   <IfModule dir_module>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   	DirectoryIndex index.php' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   </IfModule>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   <FilesMatch "\.(php|phtml|inc)$">' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '    	SetHandler "proxy:fcgi://127.0.0.1:9000"' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   </FilesMatch>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '</IfModule>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
+echo "
+<IfModule proxy_fcgi_module>
+    <IfModule dir_module>
+        DirectoryIndex index.php
+    </IfModule>
+    <FilesMatch \"\.(php|phtml|inc)$\">
+        SetHandler "proxy:fcgi://127.0.0.1:9000"
+    </FilesMatch>
+</IfModule>" >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
@@ -178,16 +179,17 @@ gsed -i '183i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/et
 # echo 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/etc/apache24/httpd.conf
 
 # 5.- Secure headers
-echo '<IfModule mod_headers.c>' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Content-Security-Policy "upgrade-insecure-requests;"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set X-Content-Type-Options "nosniff"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set X-XSS-Protection "1; mode=block"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Referrer-Policy "strict-origin"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set X-Frame-Options: "deny"' >> /usr/local/etc/apache24/httpd.conf
-echo ' SetEnv modHeadersAvailable true' >> /usr/local/etc/apache24/httpd.conf
-echo '</IfModule>' >> /usr/local/etc/apache24/httpd.conf
+echo "
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy \"upgrade-insecure-requests;\"
+    Header set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"
+    Header always edit Set-Cookie (.*) \"$1; HttpOnly; Secure\"
+    Header set X-Content-Type-Options \"nosniff\"
+    Header set X-XSS-Protection \"1; mode=block\"
+    Header set Referrer-Policy \"strict-origin\"
+    Header set X-Frame-Options: \"deny\"
+    SetEnv modHeadersAvailable true
+</IfModule>" >>  /usr/local/etc/apache24/httpd.conf
 
 # 6.- Disable the TRACE method.
 echo 'TraceEnable off' >> /usr/local/etc/apache24/httpd.conf
@@ -228,7 +230,7 @@ expect eof
 echo "$NEW_DATABASE"
 
 # Install the missing PHP packages
-pkg install -y php73-bz2 php73-curl php73-gd php73-mbstring php73-pecl-mcrypt php73-openssl php73-pdo_mysql php73-zip php73-zlib
+pkg install -y php74-bz2 php74-curl php74-gd php74-mbstring php74-pecl-mcrypt php74-openssl php74-pdo_mysql php74-zip php74-zlib
 
 # Because Wordpress and plugins will make use of an .htaccess file, let's enable it.
 sed -i -e "278s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
@@ -276,3 +278,5 @@ echo 'Actions on the CLI are now finished. Please visit the ip/domain of the sit
 ## https://www.adminbyaccident.com/security/how-to-harden-apache-http/
 ## https://www.digitalocean.com/community/tutorials/recommended-steps-to-harden-apache-http-on-freebsd-12-0
 ## https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-set-apaches-mpm-event-and-php-fpm-on-freebsd/
+
+## EOF
