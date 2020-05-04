@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
 # Change the default pkg repository from quarterly to latest
 sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
 
@@ -24,8 +30,8 @@ echo "<IfModule mod_evasive20.c>
 	DOSSiteInterval 1
 	DOSBlockingPeriod 360
 	DOSEmailNotify youremail@address.com
-	DOSSystemCommand “su – root -c /sbin/ipfw add 50000 deny %s to any in”
-	DOSLogDir “/var/log/mod_evasive”
+	DOSSystemCommand "su – root -c /sbin/ipfw add 50000 deny %s to any in"
+	DOSLogDir "/var/log/mod_evasive"
 </IfModule>" >> /usr/local/etc/apache24/modules.d/020-mod_evasive.conf
 
 # Restart Apache for the configuration to take effect
