@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
 # This is a full Wordpress install on:
 # FreeBSD 12 + Apache 2.4 latest pkg + MySQL 8 + PHP 7.4
 # Apache HTTP is set on MPM Event and PHP-FPM
