@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
 # Change the default pkg repository from quarterly to latest
 sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
 
