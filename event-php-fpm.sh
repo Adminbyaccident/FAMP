@@ -19,8 +19,8 @@ pkg install -y mysql80-server
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.3 and its 'funny' dependencies
-pkg install -y php73 php73-mysqli php73-extensions
+# Install PHP 7.4 and its 'funny' dependencies
+pkg install -y php74 php74-mysqli php74-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
@@ -48,14 +48,15 @@ sysrc php_fpm_enable="YES"
 touch /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
 # Add the configuration into the file
-echo '<IfModule proxy_fcgi_module>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   <IfModule dir_module>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   	DirectoryIndex index.php' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   </IfModule>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   <FilesMatch "\.(php|phtml|inc)$">' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '    	SetHandler "proxy:fcgi://127.0.0.1:9000"' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '   </FilesMatch>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
-echo '</IfModule>' >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
+echo "
+<IfModule proxy_fcgi_module>
+    <IfModule dir_module>
+        DirectoryIndex index.php
+    </IfModule>
+    <FilesMatch \"\.(php|phtml|inc)$\">
+        SetHandler "proxy:fcgi://127.0.0.1:9000"
+    </FilesMatch>
+</IfModule>" >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
