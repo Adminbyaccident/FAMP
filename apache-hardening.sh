@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
 # Install GNU sed to circumvent some of the syntax challenges the BSD sed has
 # such as inserting a line of text in a specific location needing a new line, etc.
 pkg install -y gsed
