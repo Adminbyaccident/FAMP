@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
 # Install Wordpress on FreeBSD after having used the following scripts:
 # event-php-fpm.sh
 # apache-hardening.sh
