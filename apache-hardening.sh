@@ -122,8 +122,8 @@ echo "<IfModule mod_evasive20.c>
 	DOSSiteInterval 1
 	DOSBlockingPeriod 360
 	DOSEmailNotify youremail@address.com
-	DOSSystemCommand “su – root -c /sbin/ipfw add 50000 deny %s to any in”
-	DOSLogDir “/var/log/mod_evasive”
+	DOSSystemCommand "su – root -c /sbin/ipfw add 50000 deny %s to any in"
+	DOSLogDir "/var/log/mod_evasive"
 </IfModule>" >> /usr/local/etc/apache24/modules.d/020-mod_evasive.conf
 
 # 9.4- Restart Apache for the configuration to take effect
