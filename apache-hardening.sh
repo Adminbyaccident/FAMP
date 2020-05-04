@@ -82,16 +82,17 @@ gsed -i '183i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/et
 # echo 'RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/etc/apache24/httpd.conf
 
 # 5.- Secure headers
-echo '<IfModule mod_headers.c>' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Content-Security-Policy "upgrade-insecure-requests;"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set X-Content-Type-Options "nosniff"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set X-XSS-Protection "1; mode=block"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set Referrer-Policy "strict-origin"' >> /usr/local/etc/apache24/httpd.conf
-echo '  Header set X-Frame-Options: "deny"' >> /usr/local/etc/apache24/httpd.conf
-echo ' SetEnv modHeadersAvailable true' >> /usr/local/etc/apache24/httpd.conf
-echo '</IfModule>' >> /usr/local/etc/apache24/httpd.conf
+echo "
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy \"upgrade-insecure-requests;\"
+    Header set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"
+    Header always edit Set-Cookie (.*) \"$1; HttpOnly; Secure\"
+    Header set X-Content-Type-Options \"nosniff\"
+    Header set X-XSS-Protection \"1; mode=block\"
+    Header set Referrer-Policy \"strict-origin\"
+    Header set X-Frame-Options: \"deny\"
+    SetEnv modHeadersAvailable true
+</IfModule>" >>  /usr/local/etc/apache24/httpd.conf
 
 # 6.- Disable the TRACE method.
 echo 'TraceEnable off' >> /usr/local/etc/apache24/httpd.conf
