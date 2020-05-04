@@ -34,15 +34,16 @@ pkg install -y expect
 touch /usr/local/etc/apache24/modules.d/001_mod-php.conf
 
 # Add the configuration into the file
-echo '<IfModule dir_module>' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '   DirectoryIndex index.php index.html' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '   <FilesMatch "\.php$">' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '        SetHandler application/x-httpd-php' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '    </FilesMatch>' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '    <FilesMatch "\.phps$">' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '        SetHandler application/x-httpd-php-source' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '    </FilesMatch>' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
-echo '</IfModule>' >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
+echo "
+<IfModule dir_module>
+   DirectoryIndex index.php index.html
+   <FilesMatch \"\.php$\"> 
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+    <FilesMatch \"\.phps$\">
+        SetHandler application/x-httpd-php-source
+    </FilesMatch>
+</IfModule>" >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
 
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
