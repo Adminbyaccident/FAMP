@@ -52,9 +52,6 @@ cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 service apache24 start
 service mysql-server start
 
-# Make the hideous 'safe' install for MySQL
-#!/bin/sh
-
 SECURE_MYSQL=$(expect -c "
 set timeout 10
 spawn mysql_secure_installation
