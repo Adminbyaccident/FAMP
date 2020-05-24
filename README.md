@@ -24,7 +24,7 @@ https://www.adminbyaccident.com/security/how-to-harden-apache-http/
 
 ## The install-mysql80-freebsd.sh script
 Not difficult to guess, this script does install MySQL version 8 on FreeBSD automatically. Reference:
-https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-export-a-mysql-database/
+https://www.adminbyaccident.com/freebsd/how-to-freebsd/install-mariadb-freebsd/
 
 ## The new-mysqldb.sh script
 The new-mysqldb.sh is a shell script launching expect in order to automate a database creation.
