@@ -140,8 +140,9 @@ pkg install -y modsecurity3-apache
 
 # Clonde with Git SpiderLab Rules >> OWASP ModSecurity Core Rule Set
 pkg install -y git
-git clone https://github.com/SpiderLabs/owasp-modsecurity-crs
-cp /usr/local/etc/modsecurity/owasp-modsecurity-crs/crs-setup.conf.example /usr/local/etc/modsecurity/crs-setup.conf
+mkdir /usr/local/etc/owasp
+git clone https://github.com/SpiderLabs/owasp-modsecurity-crs /usr/local/etc/owasp
+cp /usr/local/etc/owasp/crs-setup.conf.example /usr/local/etc/modsecurity/crs-setup.conf
 
 # Configure ModSecurity3's module
 touch /usr/local/etc/apache24/modules.d/280_mod_security.conf
