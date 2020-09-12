@@ -36,3 +36,8 @@ https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-install-wordpress-
 
 ## The self-full-wpress.sh script
 The self-full-wpress.sh script is the sum of several of the above mentioned scripts. It will install a FAMP stack server with Apache using the Event MPM, PHP using PHP-FPM and will have some degree of hardening.
+
+
+## The nexcloud.sh script
+The nextcloud.sh script will install a Nextcloud instance so you can have your own cloud services to store your files and browse them through a PC or the dedicated phone app.
+An article on 'How to install Nextcloud on FreeBSD' is on the works for adminbyaccident.com.
