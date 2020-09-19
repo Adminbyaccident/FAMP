@@ -59,7 +59,7 @@ echo "
     <IfModule dir_module>
         DirectoryIndex index.php
     </IfModule>
-    <FilesMatch \"\.(php|phtml|inc)$\">
+    <FilesMatch \"\.(php)$\">
         SetHandler "proxy:fcgi://127.0.0.1:9000"
     </FilesMatch>
 </IfModule>" >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
