@@ -131,6 +131,10 @@ echo "$NEW_DATABASE"
 # Be aware of the default SQLite DB install. Select the MySQL option!!
 # https://yourserverip/nextcloud
 
+# If you want to make the install through the script just tune the DB values above and the values just below. 
+# Please change the username and password values before issuing this script.
+su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "Nextcloud" --database-user "barrufeta" --database-pass "barrufetaXP-64" --admin-user "admin" --admin-pass "password"'
+
 ## References:
 ## https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
 ## Pending to write article at adminbyaccident.com
