@@ -69,7 +69,7 @@ AcceptPathInfo On
 </Directory>" >> /usr/local/etc/apache24/httpd.conf
 
 # Enable VirtualHost
-gsed -i 's/#Include etc/apache24/extra/httpd-vhosts.conf/Include etc/apache24/extra/httpd-vhosts.conf/g' /usr/local/etc/apache24/httpd.conf
+gsed -i 's/#Include etc\/apache24\/extra\/httpd-vhosts.conf/Include etc\/apache24\/extra\/httpd-vhosts.conf/g' /usr/local/etc/apache24/httpd.conf
 
 # Set a VirtualHost configuration for Nextcloud
 
