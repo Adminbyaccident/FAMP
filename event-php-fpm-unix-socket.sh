@@ -50,7 +50,7 @@ sed -i -e '/mod_proxy_fcgi.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24
 # Enable PHP to use the FPM process manager
 sysrc php_fpm_enable="YES"
 
-# Create configuration file for Apache HTTP to 'speak' PHP through a UNIX socket instead of a TCP one
+# Create configuration file for Apache HTTP to 'speak' PHP
 touch /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
 # Add the configuration into the file
@@ -59,7 +59,7 @@ echo "
     <IfModule dir_module>
         DirectoryIndex index.php
     </IfModule>
-    <FilesMatch \"\.(php|phtml|inc)$\">
+    <FilesMatch \"\.(php)$\">
         SetHandler proxy:unix:/tmp/php-fpm.sock|fcgi://localhost/
     </FilesMatch>
 </IfModule>" >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
@@ -115,3 +115,4 @@ echo "$SECURE_MYSQL"
 
 ## https://www.digitalocean.com/community/tutorials/how-to-configure-apache-http-with-mpm-event-and-php-fpm-on-freebsd-12-0
 ## https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-set-apaches-mpm-event-and-php-fpm-on-freebsd/
+## https://cwiki.apache.org/confluence/display/HTTPD/PHP-FPM
