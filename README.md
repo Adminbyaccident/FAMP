@@ -10,12 +10,23 @@ https://www.adminbyaccident.com/freebsd/how-to-install-famp-stack/
 
 https://www.digitalocean.com/community/tutorials/how-to-install-an-apache-mysql-and-php-famp-stack-on-freebsd-12-0
 
-## The event-php-fpm.sh script
-The event-php-fpm.sh script will install a FAMP stack server but Apache will be using the Event MPM and PHP will make use of the PHP-FPM processor. Further detail in the following links.
+## The event-php-fpm-tcp-socket.sh script
+The event-php-fpm.sh script will install a FAMP stack server but Apache will be using the Event MPM and PHP will make use of the PHP-FPM processor. The handler is set to use TCP sockets. Further detail in the following links.
 
 https://www.digitalocean.com/community/tutorials/how-to-configure-apache-http-with-mpm-event-and-php-fpm-on-freebsd-12-0
 
 https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-set-apaches-mpm-event-and-php-fpm-on-freebsd/
+
+https://cwiki.apache.org/confluence/display/HTTPD/PHP-FPM
+
+## The event-php-fpm-unix-socket.sh
+The event-php-fpm-unix-socket.sh will have the same FAMP stack installation with Apache HTTP using the Event MPM and PHP making use of the PHP-FPM processor. However the handler will make use of the UNIX sockets. Further detail in the following links.
+
+https://www.digitalocean.com/community/tutorials/how-to-configure-apache-http-with-mpm-event-and-php-fpm-on-freebsd-12-0
+
+https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-set-apaches-mpm-event-and-php-fpm-on-freebsd/
+
+https://cwiki.apache.org/confluence/display/HTTPD/PHP-FPM
 
 ## The apache_hardening.sh script
 The apache_hardening.sh script does what its name indicates, placing a self-signed certificate, protects cookies and headers and a few more things. Further detail in the following links.
