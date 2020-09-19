@@ -68,8 +68,11 @@ AcceptPathInfo On
     Require all granted
 </Directory>" >> /usr/local/etc/apache24/httpd.conf
 
+# Enable VirtualHost
+gsed -i 's/#Include etc/apache24/extra/httpd-vhosts.conf/Include etc/apache24/extra/httpd-vhosts.conf/g' /usr/local/etc/apache24/httpd.conf
+
 # Set a VirtualHost configuration for Nextcloud
-# Mind there is no configuration for port 80.
+
 echo "
 <VirtualHost *:80>
     ServerName Nextcloud
