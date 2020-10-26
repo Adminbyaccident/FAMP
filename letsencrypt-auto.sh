@@ -71,9 +71,51 @@ send \2\r\"
 expect eof
 ")
 
+# Let's add some security to the site
+# 1.- Create a block for your site's security headers.
+touch /usr/local/etc/apache24/ssl/your-domain-headers.conf
+
+# Populate the security headers file
+echo "
+<IfModule mod_headers.c>
+        # Add security and privacy related headers
+        Header set Content-Security-Policy "upgrade-insecure-requests;"
+        Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"
+        Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-XSS-Protection "1; mode=block"
+        Header set X-Robots-Tag "all"
+        Header set X-Download-Options "noopen"
+        Header set X-Permitted-Cross-Domain-Policies "none"
+        Header always set Referrer-Policy: "strict-origin"
+        Header set X-Frame-Options: "deny"
+        Header set Permissions-Policy: "geolocation self https://your-domain.com; midi none; camera none; notifications self https://your-domain.com; microphone none; speaker none; payment none"
+        SetEnv modHeadersAvailable true
+</IfModule>" >> /usr/local/etc/apache24/ssl/your-domain-headers.conf
+
+# 2.- Edit your virtualhosts file to include the following:
+
+echo "
+<VirtualHost *:443>
+    ServerName your-domain.com
+    ServerAlias www.your-domain.com
+    ServerSignature Off
+    DocumentRoot "/usr/local/www/apache24/data/your-domain.com"
+    ErrorLog "/var/log/your-domain.com-error_log"
+    CustomLog "/var/log/your-domain.com-access_log"common
+    Options -Indexes +FollowSymLinks -Includes
+    Protocols h2 h2c http/1.1
+    Include /usr/local/etc/letsencrypt/options-ssl-apache.conf
+	Include /usr/local/etc/apache24/ssl/your-domain-headers.conf
+	SSLCertificateFile /usr/local/etc/letsencrypt/live/your-domain.com/fullchain.pem
+    SSLCertificateKeyFile /usr/local/etc/letsencrypt/live/your.com/privkey.pem
+</VirtualHost> >> /usr/local/etc/apache24/extra/httpd-vhosts.conf
+
 echo "
 Visit your site with your browser http://your-domain.com and you should see the redirect to HTTPS and the index.html page rendering It works!
 "
 
 ## References:
 ## https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-freebsd-12-0
+## https://www.adminbyaccident.com/security/how-to-harden-apache-http/
+## https://www.digitalocean.com/community/tutorials/recommended-steps-to-harden-apache-http-on-freebsd-12-0
