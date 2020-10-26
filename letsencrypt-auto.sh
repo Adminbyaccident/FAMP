@@ -73,7 +73,7 @@ expect eof
 
 # Let's add some security to the site
 # 1.- Create a block for your site's security headers.
-touch /usr/local/etc/apache24/ssl/your-domain-headers.conf
+touch /usr/local/etc/apache24/Includes/headers.conf
 
 # Populate the security headers file
 echo "
@@ -89,9 +89,9 @@ echo "
         Header set X-Permitted-Cross-Domain-Policies "none"
         Header always set Referrer-Policy: "strict-origin"
         Header set X-Frame-Options: "deny"
-        Header set Permissions-Policy: "geolocation self https://your-domain.com; midi none; camera none; notifications self https://your-domain.com; microphone none; speaker none; payment none"
+        Header set Permissions-Policy: "geolocation=(none); midi=(none); camera=(none); notifications=(none); microphone=(none); speaker=(none); payment=(none)"
         SetEnv modHeadersAvailable true
-</IfModule>" >> /usr/local/etc/apache24/ssl/your-domain-headers.conf
+</IfModule>" >> /usr/local/etc/apache24/Includes/headers.conf
 
 # 2.- Edit your virtualhosts file to include the following:
 
@@ -106,7 +106,7 @@ echo "
     Options -Indexes +FollowSymLinks -Includes
     Protocols h2 h2c http/1.1
     Include /usr/local/etc/letsencrypt/options-ssl-apache.conf
-    Include /usr/local/etc/apache24/ssl/your-domain-headers.conf
+    Include /usr/local/etc/apache24/Includes/headers.conf
     SSLCertificateFile /usr/local/etc/letsencrypt/live/your-domain.com/fullchain.pem
     SSLCertificateKeyFile /usr/local/etc/letsencrypt/live/your.com/privkey.pem
 </VirtualHost> >> /usr/local/etc/apache24/extra/httpd-vhosts.conf
