@@ -4,14 +4,14 @@ FreeBSD + Apache + MySQL (or the like) + PHP (or Perl, Python)
 This is a collection of scripts to build a FAMP server.
 
 ## The stdard-famp.sh script
-The stdard-famp.sh script builds a standard FAMP server with the defaults on. Further detail in the following links.
+The stdard-famp.sh script builds a standard FAMP server with the defaults on. This installation uses the pre-fork processing module in Apache, which will create a new proces for each new connection to the server. The event configuration is much faster and uses less resources. This is only recommended for legacy applications and severe security restrictions. Further detail in the following links.
 
 https://www.adminbyaccident.com/freebsd/how-to-install-famp-stack/
 
 https://www.digitalocean.com/community/tutorials/how-to-install-an-apache-mysql-and-php-famp-stack-on-freebsd-12-0
 
 ## The event-php-fpm-tcp-socket.sh script
-The event-php-fpm.sh script will install a FAMP stack server but Apache will be using the Event MPM and PHP will make use of the PHP-FPM processor. The handler is set to use TCP sockets. Further detail in the following links.
+The event-php-fpm.sh script will install a FAMP stack server but Apache HTTP will be using the Event MPM and PHP will make use of the PHP-FPM processor. The handler is set to use TCP sockets. Much faster and resource optimized compared to the pre-fork configuration. Further detail in the following links.
 
 https://www.digitalocean.com/community/tutorials/how-to-configure-apache-http-with-mpm-event-and-php-fpm-on-freebsd-12-0
 
