@@ -115,7 +115,7 @@ echo "
         Header set X-Permitted-Cross-Domain-Policies "none"
         Header always set Referrer-Policy: "strict-origin"
         Header set X-Frame-Options: "deny"
-        Header set Permissions-Policy: "geolocation=(none); midi=(none); camera=(none); notifications=(none); microphone=(none); speaker=(none); payment=(none); accelerometer=(none)"
+        Header set Permissions-Policy: "accelerometer=(none); ambient-light-sensor=(none); autoplay=(none); battery=(none); display-capture=(none); document-domain=(none); encrypted-media=(self); execution-while-not-rendered=(none); execution-while-out-of-viewport=(none); geolocation=(none); gyroscope=(none); layout-animations=(none); legacy-image-formats=(self); magnometer=(none); midi=(none); camera=(none); notifications=(none); microphone=(none); speaker=(none); oversized-images=(self); payment=(none); picture-in-picture=(none); publickey-credentials-get=(none); sync-xhr=(none); usb=(none); vr=(none); wake-lock=(none); screen-wake-lock=(none); web-share=(none); xr-partial-tracking=(none)"
         SetEnv modHeadersAvailable true
 </IfModule>" >>  /usr/local/etc/apache24/Includes/headers.conf
 
