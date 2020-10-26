@@ -138,7 +138,7 @@ service apache24 restart
 pkg install -y ap24-mod_evasive
 
 # 9.1- Enable the mod_evasive module in Apache HTTP
-sed -i -e '/mod_evasive20.so/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+sed -i -e '/mod_evasive20.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
 
 # 9.2- Configure the mod_evasive module
 touch /usr/local/etc/apache24/modules.d/020-mod_evasive.conf
