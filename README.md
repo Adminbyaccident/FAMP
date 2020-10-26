@@ -38,7 +38,9 @@ The letsencrypt-auto.sh script does install a certificate expelled from the Lets
 More details on this script from these articles:
 
 https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-freebsd-12-0
+
 https://www.adminbyaccident.com/security/how-to-harden-apache-http/
+
 https://www.digitalocean.com/community/tutorials/recommended-steps-to-harden-apache-http-on-freebsd-12-0
 
 ## The install-mysql80-freebsd.sh script
