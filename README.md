@@ -33,6 +33,9 @@ The apache_hardening.sh script does what its name indicates, placing a self-sign
 
 https://www.adminbyaccident.com/security/how-to-harden-apache-http/
 
+## The letsencrypt-auto.sh script
+The letsencrypt-auto.sh script does install a certificate expelled from the LetsEncrypt CA plus adds security headers and a virtualhost entry for your site. Be aware of using it in combination with the apache_hardening.sh script, since they will collide.
+
 ## The install-mysql80-freebsd.sh script
 Not difficult to guess, this script does install MySQL version 8 on FreeBSD automatically. Reference:
 https://www.adminbyaccident.com/freebsd/how-to-freebsd/install-mariadb-freebsd/
