@@ -106,8 +106,8 @@ echo "
     Options -Indexes +FollowSymLinks -Includes
     Protocols h2 h2c http/1.1
     Include /usr/local/etc/letsencrypt/options-ssl-apache.conf
-	Include /usr/local/etc/apache24/ssl/your-domain-headers.conf
-	SSLCertificateFile /usr/local/etc/letsencrypt/live/your-domain.com/fullchain.pem
+    Include /usr/local/etc/apache24/ssl/your-domain-headers.conf
+    SSLCertificateFile /usr/local/etc/letsencrypt/live/your-domain.com/fullchain.pem
     SSLCertificateKeyFile /usr/local/etc/letsencrypt/live/your.com/privkey.pem
 </VirtualHost> >> /usr/local/etc/apache24/extra/httpd-vhosts.conf
 
