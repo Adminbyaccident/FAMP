@@ -37,11 +37,8 @@
 # Update packages sources on the system first
 pkg upgrade -y
 
-# Install GNU sed
-pkg install -y gsed
-
 # Configure PHP (already installed by the previous FAMP script) to use 512M instead of the default 128M
-gsed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/etc/php.ini
+sed -i -e '/memory_limit/s/128M/512M/' /usr/local/etc/php.ini
 
 # Install specific PHP dependencies for Nextcloud
 pkg install -y php74-zip php74-mbstring php74-gd php74-zlib php74-curl php74-openssl php74-pdo_mysql php74-pecl-imagick php74-intl php74-bcmath php74-gmp php74-fileinfo
@@ -69,7 +66,7 @@ AcceptPathInfo On
 </Directory>" >> /usr/local/etc/apache24/httpd.conf
 
 # Enable VirtualHost
-gsed -i 's/#Include etc\/apache24\/extra\/httpd-vhosts.conf/Include etc\/apache24\/extra\/httpd-vhosts.conf/g' /usr/local/etc/apache24/httpd.conf
+sed -i -e '/httpd-vhosts.conf/s/#Include/Include/' /usr/local/etc/apache24/httpd.conf
 
 # Set a VirtualHost configuration for Nextcloud
 
@@ -85,8 +82,6 @@ echo "
     RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
     Protocols h2 h2c http/1.1
 </VirtualHost>
-
-
 <VirtualHost *:443>
     ServerName Nextcloud
     ServerAlias Nextcloud
