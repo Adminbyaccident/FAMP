@@ -6,6 +6,21 @@
 
 # sudo ./SCRIPTNAME.sh
 
+###########################################################################################################
+###########################################  WARNING !!!  #################################################
+###########################################################################################################
+
+# Use this script at your own discretion. It modifies important bits of your Apache HTTP configuration
+# For example it changes:
+# 1.- Information provided by your server
+# 2.- It installs a self-signed certificate (modify this at your own will)
+# 3.- If, of course, enables SSL/TLS connections
+# 4.- Configures HTTP headers to be secure in a strict fashion. This may break some of your desired features. Adjust accordingly.
+# 5.- Disables the TRACE method
+# 6.- Explicitely and exclusively allows the GET, POST and HEAD methods
+# 7.- It installs the Mod_Evasive module in Apache HTTP to help mitigate DoS attacks
+# 8.- It installs the Mod_Security module in Apache HTTP as a Web Application Firewall (WAF) setup with the default rules. Adjust to your needs.
+
 # Install GNU sed to circumvent some of the syntax challenges the BSD sed has
 # such as inserting a line of text in a specific location needing a new line, etc.
 pkg install -y gsed
@@ -90,15 +105,23 @@ gsed -i '183i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/et
 # 5.- Secure headers
 echo "
 <IfModule mod_headers.c>
-    Header set Content-Security-Policy \"upgrade-insecure-requests;\"
-    Header set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"
-    Header always edit Set-Cookie (.*) \"$1; HttpOnly; Secure\"
-    Header set X-Content-Type-Options \"nosniff\"
-    Header set X-XSS-Protection \"1; mode=block\"
-    Header set Referrer-Policy \"strict-origin\"
-    Header set X-Frame-Options: \"deny\"
-    SetEnv modHeadersAvailable true
-</IfModule>" >>  /usr/local/etc/apache24/httpd.conf
+        Header set Content-Security-Policy "upgrade-insecure-requests;"
+        Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"
+        Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-XSS-Protection "1; mode=block"
+        Header set X-Robots-Tag "all"
+        Header set X-Download-Options "noopen"
+        Header set X-Permitted-Cross-Domain-Policies "none"
+        Header always set Referrer-Policy: "strict-origin"
+        Header set X-Frame-Options: "deny"
+        Header set Permissions-Policy: "geolocation=(none); midi=(none); camera=(none); notifications=(none); microphone=(none); speaker=(none); payment=(none); accelerometer=(none)"
+        SetEnv modHeadersAvailable true
+</IfModule>" >>  /usr/local/etc/apache24/Includes/headers.conf
+
+echo " 
+Include /usr/local/etc/apache24/Includes/headers.conf
+" >> /usr/local/etc/apache24/httpd.conf
 
 # 6.- Disable the TRACE method.
 echo 'TraceEnable off' >> /usr/local/etc/apache24/httpd.conf
