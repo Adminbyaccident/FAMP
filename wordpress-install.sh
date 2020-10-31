@@ -35,6 +35,9 @@ echo "$NEW_DATABASE"
 # Install the missing PHP packages
 pkg install -y php74-bz2 php74-curl php74-gd php74-mbstring php74-pecl-mcrypt php74-openssl php74-pdo_mysql php74-zip php74-zlib php74-pecl-imagick-im7
 
+# Reload PHP-FPM so it acknowledges the recently installed PHP packages
+service php-fpm reload
+
 # Because Wordpress and plugins will make use of an .htaccess file, let's enable it.
 sed -i -e "278s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
 
