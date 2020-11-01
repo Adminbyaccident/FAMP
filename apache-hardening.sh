@@ -105,6 +105,7 @@ gsed -i '183i\RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]' /usr/local/et
 # 5.- Secure headers
 echo "
 <IfModule mod_headers.c>
+        # Add security and privacy related headers
         Header set Content-Security-Policy "upgrade-insecure-requests;"
         Header always edit Set-Cookie (.*) "$1; HttpOnly; Secure"
         Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
