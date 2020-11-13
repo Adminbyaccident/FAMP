@@ -37,9 +37,14 @@ modsecurity on
 modsecurity_rules_file /usr/local/etc/apache24/modsecurity-rules.conf
 " >> /usr/local/etc/apache24/httpd.conf
 
+# Rename 2 config files
+mv /usr/local/etc/modsecurity/coreruleset/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example /usr/local/etc/modsecurity/coreruleset/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+
+mv /usr/local/etc/modsecurity/coreruleset/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example /usr/local/etc/modsecurity/coreruleset/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
 
 # Restart Apache HTTP
 apachectl restart
 
 ## References:
 ## https://github.com/SpiderLabs/owasp-modsecurity-crs
+## https://raw.githubusercontent.com/coreruleset/coreruleset/v3.2/dev/INSTALL
