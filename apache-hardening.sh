@@ -162,19 +162,31 @@ apachectl graceful
 # 10.- Install Modsecurity 3 for Apache HTTP
 pkg install -y modsecurity3-apache
 
-# Clonde with Git SpiderLab Rules >> OWASP ModSecurity Core Rule Set
+# Download Git SpiderLab Rules >> OWASP ModSecurity Core Rule Set
 pkg install -y git
-mkdir /usr/local/etc/owasp
-git clone https://github.com/SpiderLabs/owasp-modsecurity-crs /usr/local/etc/owasp
-cp /usr/local/etc/owasp/crs-setup.conf.example /usr/local/etc/modsecurity/crs-setup.conf
+git clone https://github.com/coreruleset/coreruleset /usr/local/etc/modsecurity/coreruleset/
+cp /usr/local/etc/modsecurity/coreruleset/crs-setup.conf.example /usr/local/etc/modsecurity/coreruleset/crs-setup.conf
+sed -ip 's/SecRuleEngine DetectionOnly/SecRuleEngine On/g' /usr/local/etc/modsecurity/modsecurity.conf
 
-# Configure ModSecurity3's module
-touch /usr/local/etc/apache24/modules.d/280_mod_security.conf
-echo " 
-<IfModule security3_module>
-    modsecurity on
-    modsecurity_rules_file /usr/local/etc/modsecurity/crs-setup.conf
-</IfModule>" >> /usr/local/etc/apache24/modules.d/280_mod_security.conf 
+# Set the configuration files for ModSecurity 3 to work
+touch /usr/local/etc/apache24/modsecurity-rules.conf
+
+echo "
+Include /usr/local/etc/modsecurity/modsecurity.conf
+Include /usr/local/etc/modsecurity/coreruleset/crs-setup.conf
+Include /usr/local/etc/modsecurity/coreruleset/rules/*.conf
+" >> /usr/local/etc/apache24/modsecurity-rules.conf
+
+# Enable ModSecurity's 3 module
+echo "
+modsecurity on
+modsecurity_rules_file /usr/local/etc/apache24/modsecurity-rules.conf
+" >> /usr/local/etc/apache24/httpd.conf
+
+# Rename 2 config files
+mv /usr/local/etc/modsecurity/coreruleset/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example /usr/local/etc/modsecurity/coreruleset/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+
+mv /usr/local/etc/modsecurity/coreruleset/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example /usr/local/etc/modsecurity/coreruleset/rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
 
 # Restart Apache HTTP
 apachectl restart
