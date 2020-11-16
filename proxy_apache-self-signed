@@ -83,7 +83,7 @@ sed -i -e '/mod_ssl.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.
 sed -i -e '/mod_socache_shmcb.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
 
 # Enable Apache HTTP to listen on port 443 for the HTTPS connections
-sed -i -e '/Listen/s/80/80 443/' /usr/local/etc/apache24/httpd.conf
+echo "Listen 443" >> /usr/local/etc/apache24/httpd.conf
 
 # Redirect HTTP connections to HTTPS (port 80 and 443 respectively) depends on the mod_rewrite module
 # Enabling the rewrite module
