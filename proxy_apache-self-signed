@@ -1,0 +1,151 @@
+#!/bin/sh
+
+# Instructions on how to use this script 
+
+# chmod +x SCRIPTNAME.sh
+
+# sudo ./SCRIPTNAME.sh
+
+# This is a script which results in an Apache HTTP set up as a reverse proxy.
+# Remember to change the settings for the backend server so this proxy can read from that box.
+
+# Change the default pkg repository from quarterly to latest
+sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
+
+# Update packages (it will first download the pkg repo from latest)
+# secondly it will upgrade any installed packages.
+pkg upgrade -y
+
+# Install Apache HTTP 2.4
+pkg install -y apache24
+
+# Set up Apache HTTP to be started at boot time
+sysrc apache24_enable="YES"
+
+# We'll set Apache HTTP to use the Event MPM module instead of the default pre-fork
+# (on FreeBSD is still set as pre-fork instead of the default mpm_event from Apache HTTP themselves!)
+
+# Set a ServerName directive in Apache HTTP. Place a name to your server.
+sed -i -e 's/#ServerName www.example.com:80/ServerName Apache_Proxy/g' /usr/local/etc/apache24/httpd.conf
+
+# Configure Apache HTTP to use MPM Event instead of the Prefork default
+# Disable the Prefork MPM
+sed -i -e '/prefork/s/LoadModule/#LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable the Event MPM
+sed -i -e '/event/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable the proxy module for the backend server/s to use it
+sed -i -e '/mod_proxy.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable the mod_proxy_http module to proxy HTTP and HTTPS requests to the backend using the HTTP/0.9, HTTP1/0 and HTTP/1.1 protocols
+sed -i -e '/mod_proxy_http.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable the mod_proxy_http2 module to proxy HTTP and HTTPS requests to the backend using the HTTP2 protocol
+sed -i -e '/mod_proxy_http2.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enabling TLS connections with a self signed certificate. 
+# Key and certificate generation
+# Because this is a process where manual interaction is required let's make use of Expect so no hands are needed.
+
+pkg install -y expect
+
+SECURE_APACHE=$(expect -c "
+set timeout 10
+spawn openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt
+expect \"Country Name (2 letter code) \[AU\]:\"
+send \"ES\r\"
+expect \"State or Province Name (full name) \[Some-State\]:\"
+send \"Barcelona\r\"
+expect \"Locality Name (eg, city) \[\]:\"
+send \"Terrassa\r\"
+expect \"Organization Name (eg, company) \[Internet Widgits Pty Ltd\]:\"
+send \"cargols.com\r\"
+expect \"Organizational Unit Name (eg, section) \[\]:\"
+send \"Operations\r\"
+expect \"Common Name (e.g. server FQDN or YOUR name) \[\]:\"
+send \"Albert Valbuena\r\"
+expect \"Email Address \[\]:\"
+send \"thewhitereflex@gmail.com\r\"
+expect eof
+")
+
+echo "$SECURE_APACHE"
+
+# Because we have generated a certificate + key we will enable SSL/TLS in the server.
+# Enabling TLS connections in the server.
+sed -i -e '/mod_ssl.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable the server's default TLS configuration to be applied.
+# sed -i -e '/httpd-ssl.conf/s/#Include/Include/' /usr/local/etc/apache24/httpd.conf
+
+# Enable TLS session cache.
+sed -i -e '/mod_socache_shmcb.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable Apache HTTP to listen on port 443 for the HTTPS connections
+sed -i -e '/Listen/s/80/80 443/' /usr/local/etc/apache24/httpd.conf
+
+# Redirect HTTP connections to HTTPS (port 80 and 443 respectively) depends on the mod_rewrite module
+# Enabling the rewrite module
+sed -i -e '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
+
+# Enable VirtualHosts
+sed -i -e '/httpd-vhosts.conf/s/#Include/Include/' /usr/local/etc/apache24/httpd.conf
+
+# Make a backup of the original httpd-vhosts file
+mv /usr/local/etc/apache24/extra/httpd-vhosts.conf /usr/local/etc/apache24/extra/httpd-vhosts.original
+
+# Edit your desired httpd-vhosts.conf
+echo "
+<VirtualHost *:80>
+    ServerName cargols.com
+    ServerAlias www.cargols.com
+    ServerSignature Off
+    Options -Indexes +FollowSymLinks -Includes
+    Protocols h2 h2c http/1.1
+	  Redirect / https://www.cargols.com/
+</VirtualHost>
+
+
+<VirtualHost *:443>
+    ServerName cargols.com
+    ServerAlias www.cargols.com
+    ServerSignature Off
+    Protocols h2 h2c http/1.1
+	  ProxyPreserveHost on	
+	  ProxyPass / http://192.168.1.199:8080/
+	  ProxyPassReverse / http://192.168.1.199:8080/
+	  Options -Indexes +FollowSymLinks -Includes
+    SSLEngine on
+    SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+    SSLHonorCipherOrder on
+    SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+    SSLCertificateFile /usr/local/etc/apache24/server.crt
+    SSLCertificateKeyFile /usr/local/etc/apache24/server.key
+
+	ErrorLog \"/var/log/cargols.com-error_log\"
+    CustomLog \"/var/log/cargols.com-access_log\"common
+    
+<IfModule mod_headers.c>
+        # Add security and privacy related headers
+        Header set Content-Security-Policy \"upgrade-insecure-requests;\"
+        Header always edit Set-Cookie (.*) \"$1; HttpOnly; Secure\"
+        Header set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"
+        Header set X-Content-Type-Options \"nosniff\"
+        Header set X-XSS-Protection \"1; mode=block\"
+        Header set X-Robots-Tag \"all\"
+        Header set X-Download-Options \"noopen\"
+        Header set X-Permitted-Cross-Domain-Policies \"none\"
+        Header always set Referrer-Policy: \"strict-origin\"
+        Header set X-Frame-Options: \"deny\"
+        Header set Permissions-Policy: \"geolocation self https://wwww.cargols.com; midi none; camera none; notifications self https://www.cargols.com; microphone none; speaker none; payment none\"
+        SetEnv modHeadersAvailable true
+</IfModule>
+
+</VirtualHost>
+" >> /usr/local/etc/apache24/extra/httpd-vhosts.conf
+
+# Restart Apache HTTP for the config changes to be applied
+service apache24 restart
+
+## This script has been tested once. Further configuration will be added.
