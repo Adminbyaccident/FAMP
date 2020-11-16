@@ -112,10 +112,10 @@ echo "
     ServerAlias www.cargols.com
     ServerSignature Off
     Protocols h2 h2c http/1.1
-	  ProxyPreserveHost on	
-	  ProxyPass / http://192.168.1.199:8080/
-	  ProxyPassReverse / http://192.168.1.199:8080/
-	  Options -Indexes +FollowSymLinks -Includes
+    ProxyPreserveHost on	
+    ProxyPass / http://192.168.1.199:8080/
+    ProxyPassReverse / http://192.168.1.199:8080/
+    Options -Indexes +FollowSymLinks -Includes
     SSLEngine on
     SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
     SSLHonorCipherOrder on
