@@ -20,7 +20,7 @@ pkg install -y modsecurity3-apache
 pkg install -y git
 git clone https://github.com/coreruleset/coreruleset /usr/local/etc/modsecurity/coreruleset/
 cp /usr/local/etc/modsecurity/coreruleset/crs-setup.conf.example /usr/local/etc/modsecurity/coreruleset/crs-setup.conf
-sed -ip 's/SecRuleEngine DetectionOnly/SecRuleEngine On/g' /usr/local/etc/modsecurity/modsecurity.conf
+sed -i -e 's/SecRuleEngine DetectionOnly/SecRuleEngine On/g' /usr/local/etc/modsecurity/modsecurity.conf
 
 # Set the configuration files for ModSecurity 3 to work
 touch /usr/local/etc/apache24/modsecurity-rules.conf
