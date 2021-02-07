@@ -165,7 +165,6 @@ touch /usr/local/etc/apache24/extra/httpd-security.conf
 
 echo "
 <IfModule mod_rewrite.c>
-# BEGIN BPSQSE BPS QUERY STRING EXPLOITS
 RewriteEngine on
 RewriteCond %{REQUEST_METHOD} ^(HEAD|TRACE|DELETE|TRACK|DEBUG) [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} (havij|libwww-perl|wget|python|nikto|curl|scan|java|winhttp|clshttp|loader|fetch) [NC,OR]
@@ -214,7 +213,6 @@ RewriteCond %{QUERY_STRING} \-[sdcr].*(allow_url_include|allow_url_fopen|safe_mo
 RewriteCond %{QUERY_STRING} (;|<|>|'|\"|\)|%0A|%0D|%22|%27|%3C|%3E|%00).*(/\*|union|select|insert|drop|delete|update|cast|create|char|convert|alter|declare|order|script|set|md5|benchmark|encode) [NC,OR]
 RewriteCond %{QUERY_STRING} (sp_executesql) [NC]
 RewriteRule ^(.*)$ - [F]
-# END BPSQSE BPS QUERY STRING EXPLOITS
 </IfModule>
 " >> /usr/local/etc/apache24/extra/httpd-security.conf
 
