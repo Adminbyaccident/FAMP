@@ -165,8 +165,13 @@ touch /usr/local/etc/apache24/extra/httpd-security.conf
 
 echo "
 <IfModule mod_rewrite.c>
+
 RewriteEngine on
+
+# Condition to block suspicious request methods.
 RewriteCond %{REQUEST_METHOD} ^(HEAD|TRACE|DELETE|TRACK|DEBUG) [NC,OR]
+
+# Condition to block the specified user agents from programs and bots.
 RewriteCond %{HTTP_USER_AGENT} (havij|libwww-perl|wget|python|nikto|curl|scan|java|winhttp|clshttp|loader|fetch) [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} (%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} (;|<|>|'|\"|\)|\(|%0A|%0D|%22|%27|%28|%3C|%3E|%00).*(libwww-perl|wget|python|nikto|curl|scan|java|winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner) [NC,OR]
@@ -190,20 +195,39 @@ RewriteCond %{HTTP:X-Forwarded-From} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP:X-Forwarded-Host} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP:X-Remote-Addr} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 
+# Condition to block requests that incorporate the specified expressions in them. Avoid injection.
 RewriteCond %{THE_REQUEST} (\?|\*|%2a)+(%20+|\\s+|%20+\\s+|\\s+%20+|\\s+%20+\\s+)(http|https)(:/|/) [NC,OR]
+
+# Condition to block any request containing the etc/passwd string and avoid system passwords exfiltration.
 RewriteCond %{THE_REQUEST} etc/passwd [NC,OR]
+
+# Condition to block the execution of CGI programs.
 RewriteCond %{THE_REQUEST} cgi-bin [NC,OR]
+
+# Condition to block requests that jump into the next line. Avoid injection.
 RewriteCond %{THE_REQUEST} (%0A|%0D|\\r|\\n) [NC,OR]
+
+# Condition to block any Sharepoint services call.
 RewriteCond %{REQUEST_URI} owssvr\.dll [NC,OR]
+
+# Condition to block requests that simulate to come from the specified expressions. Avoid injection.
 RewriteCond %{HTTP_REFERER} (%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
 RewriteCond %{HTTP_REFERER} \.opendirviewer\. [NC,OR]
 RewriteCond %{HTTP_REFERER} users\.skynet\.be.* [NC,OR]
+
+# Condition to block requests that incorporate the specified expressions in them.
 RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=(http|https):// [NC,OR]
 RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=(\.\.//?)+ [NC,OR]
 RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=/([a-z0-9_.]//?)+ [NC,OR]
+
+# Condition to block any PHP execution. Avoid injection.
 RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC,OR]
 RewriteCond %{QUERY_STRING} (\.\./|%2e%2e%2f|%2e%2e/|\.\.%2f|%2e\.%2f|%2e\./|\.%2e%2f|\.%2e/) [NC,OR]
+
+# Condition to block FTP usage. Avoid uploads.
 RewriteCond %{QUERY_STRING} ftp\: [NC,OR]
+
+# Condition to block any requests jumping over paths or injecting/retrieving objects.
 RewriteCond %{QUERY_STRING} (http|https)\: [NC,OR]
 RewriteCond %{QUERY_STRING} \=\|w\| [NC,OR]
 RewriteCond %{QUERY_STRING} ^(.*)/self/(.*)$ [NC,OR]
@@ -216,25 +240,44 @@ RewriteCond %{QUERY_STRING} (\<|%3C).*object.*(\>|%3E) [NC,OR]
 RewriteCond %{QUERY_STRING} (<|%3C)([^o]*o)+bject.*(>|%3E) [NC,OR]
 RewriteCond %{QUERY_STRING} (\<|%3C).*iframe.*(\>|%3E) [NC,OR]
 RewriteCond %{QUERY_STRING} (<|%3C)([^i]*i)+frame.*(>|%3E) [NC,OR]
+
+# Condition to block with the intention to en/de-code strings in base64
 RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [NC,OR]
 RewriteCond %{QUERY_STRING} base64_(en|de)code[^(]*\([^)]*\) [NC,OR]
+
+# Condition to block
 RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
 RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
+
+# Condition to block requests that incorporate the specified expressions in them. Avoid injection.
 RewriteCond %{QUERY_STRING} ^.*(\(|\)|<|>|%3c|%3e).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*(\x00|\x04|\x08|\x0d|\x1b|\x20|\x3c|\x3e|\x7f).* [NC,OR]
+
+# Condition to block requests which declare the specified values in the string query. Avoid injection.
 RewriteCond %{QUERY_STRING} (NULL|OUTFILE|LOAD_FILE) [OR]
+
+# Condition to block requests intending to retrieve or inject content in the motd file or /etc and /bin directories.
 RewriteCond %{QUERY_STRING} (\.{1,}/)+(motd|etc|bin) [NC,OR]
+
+# Condition to block any string referencing to the host or loopback interface.
 RewriteCond %{QUERY_STRING} (localhost|loopback|127\.0\.0\.1) [NC,OR]
+
+# Condition to block requests that incorporate the specified expressions in them. Avoid injection.
 RewriteCond %{QUERY_STRING} (<|>|'|%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
+
+# Condition to block SQL injection attacks 
 RewriteCond %{QUERY_STRING} concat[^\(]*\( [NC,OR]
 RewriteCond %{QUERY_STRING} union([^s]*s)+elect [NC,OR]
 RewriteCond %{QUERY_STRING} union([^a]*a)+ll([^s]*s)+elect [NC,OR]
 RewriteCond %{QUERY_STRING} \-[sdcr].*(allow_url_include|allow_url_fopen|safe_mode|disable_functions|auto_prepend_file) [NC,OR]
 RewriteCond %{QUERY_STRING} (;|<|>|'|\"|\)|%0A|%0D|%22|%27|%3C|%3E|%00).*(/\*|union|select|insert|drop|delete|update|cast|create|char|convert|alter|declare|order|script|set|md5|benchmark|encode) [NC,OR]
 RewriteCond %{QUERY_STRING} (sp_executesql) [NC]
+
+# The rewrite rule itself. Any match gets blocked.
 RewriteRule ^(.*)$ - [F]
+
 </IfModule>
-" >> /usr/local/etc/apache24/extra/httpd-security.conf
+" >> /usr/local/etc/apache24/extra/nextcloud-security.conf
 
 echo "
 Include /usr/local/etc/apache24/extra/httpd-security.conf
