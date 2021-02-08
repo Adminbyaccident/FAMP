@@ -368,8 +368,8 @@ RewriteCond %{QUERY_STRING} (sp_executesql) [NC]
 
 # The rewrite rule itself. Any match gets blocked.
 RewriteRule ^(.*)$ - [F]
-</IfModule>
 
+</IfModule>
 " >> /usr/local/etc/apache24/extra/nextcloud-security.conf
 
 # Restart Apache service
