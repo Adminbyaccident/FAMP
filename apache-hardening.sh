@@ -107,7 +107,7 @@ echo "
 <IfModule mod_headers.c>
         # Add security and privacy related headers
         Header set Content-Security-Policy \"upgrade-insecure-requests;\"
-        Header always edit Set-Cookie (.*) \"$1; HttpOnly; Secure\"
+        Header always edit Set-Cookie (.*) \"\$1; HttpOnly; Secure\"
         Header set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"
         Header set X-Content-Type-Options \"nosniff\"
         Header set X-XSS-Protection \"1; mode=block\"
