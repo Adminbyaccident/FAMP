@@ -189,7 +189,7 @@ echo "
 <IfModule mod_headers.c>
     Header set Content-Security-Policy \"upgrade-insecure-requests;\"
     Header set Strict-Transport-Security \"max-age=31536000; includeSubDomains\"
-    Header always edit Set-Cookie (.*) \"$1; HttpOnly; Secure\"
+    Header always edit Set-Cookie (.*) \"\$1; HttpOnly; Secure\"
     Header set X-Content-Type-Options \"nosniff\"
     Header set X-XSS-Protection \"1; mode=block\"
     Header set Referrer-Policy \"strict-origin\"
