@@ -48,3 +48,4 @@ apachectl restart
 ## References:
 ## https://github.com/SpiderLabs/owasp-modsecurity-crs
 ## https://raw.githubusercontent.com/coreruleset/coreruleset/v3.2/dev/INSTALL
+## https://www.adminbyaccident.com/freebsd/how-to-freebsd/how-to-install-modsecurity-3-on-freebsd/
