@@ -114,9 +114,10 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
+# Display the location of the generated root password for MySQL
 echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 
-# No one but root can read this file. Read only permissions.
+# No one but root can read this file. Read only permission.
 chmod 400 /root/db_root_pwd.txt
 
 ## References in the following URLS:
