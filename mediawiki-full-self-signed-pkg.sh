@@ -235,8 +235,7 @@ echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
 echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Final message
-echo"
-MediaWiki has been installed on this server. Please visit the URL of this server with your browser and finish the install there"
+echo "MediaWiki has been installed on this server. Please visit the URL of this server with your browser and finish the install there"
 
 ## References in the following URLS:
 
