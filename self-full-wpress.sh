@@ -110,8 +110,6 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
-
 # Install GNU sed to circumvent some of the syntax challenges the BSD sed has
 # such as inserting a line of text in a specific location needing a new line, etc.
 pkg install -y gsed
@@ -292,10 +290,9 @@ chmod 400 /root/new_db_user_name.txt
 chmod 400 /root/newdb_pwd.txt
 
 # Display the new database, username and password generated on MySQL to accomodate WordPress
+echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
-
 echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
-
 echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Actions on the CLI are now finished.
