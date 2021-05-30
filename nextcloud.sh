@@ -41,6 +41,9 @@
 # Update packages sources on the system first
 pkg upgrade -y
 
+# Install dependencies you may not have
+pkg install -y bash pwgen expect
+
 # Configure PHP (already installed by the previous FAMP script) to use 512M instead of the default 128M
 sed -i -e '/memory_limit/s/128M/512M/' /usr/local/etc/php.ini
 
@@ -139,18 +142,24 @@ echo "
 service apache24 restart
 
 # Create the database for Nextcloud and user. Mind this is MySQL version 8
-# Mind we have Expect already installed on the system because of the previous scripts.
+
+NEW_DB_NAME=$(pwgen 8 --secure --numerals --capitalize) && export NEW_DB_NAME && echo $NEW_DB_NAME >> /root/new_db_name.txt
+
+NEW_DB_USER_NAME=$(pwgen 10 --secure --numerals --capitalize) && export NEW_DB_USER_NAME && echo $NEW_DB_USER_NAME >> /root/new_db_user_name.txt
+
+NEW_DB_PASSWORD=$(pwgen 32 --secure --numerals --capitalize) && export NEW_DB_PASSWORD && echo $NEW_DB_PASSWORD >> /root/newdb_pwd.txt
+
 NEW_DATABASE=$(expect -c "
 set timeout 10
 spawn mysql -u root -p
 expect \"Enter password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"CREATE DATABASE Nextcloud;\r\"
+send \"CREATE DATABASE $NEW_DB_NAME;\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"CREATE USER 'barrufeta'@'localhost' IDENTIFIED WITH mysql_native_password BY 'barrufetaXP-64';\r\"
+send \"CREATE USER '$NEW_DB_USER_NAME'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_DB_PASSWORD';\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"GRANT ALL PRIVILEGES ON Nextcloud.* TO 'barrufeta'@'localhost';\r\"
+send \"GRANT ALL PRIVILEGES ON $NEW_DB_NAME.* TO '$NEW_DB_USER_NAME'@'localhost';\r\"
 expect \"root@localhost \[(none)\]>\"
 send \"FLUSH PRIVILEGES;\r\"
 expect \"root@localhost \[(none)\]>\"
@@ -160,13 +169,23 @@ expect eof
 
 echo "$NEW_DATABASE"
 
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+
+echo " Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
+
 # Now Visit your server ip and finish the GUI install. 
 # Be aware of the default SQLite DB install. Select the MySQL option!!
 # https://yourserverip/nextcloud
 
-# If you want to make the install through the script just tune the DB values above and the values just below. 
-# Please change the username and password values before issuing this script.
-su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "Nextcloud" --database-user "barrufeta" --database-pass "barrufetaXP-64" --admin-user "admin" --admin-pass "password"'
+# Automatic NextCloud install using MySQL instead of the default SQLite
+
+NEXTCLOUD_USER=$(pwgen 10 --secure --numerals --capitalize) && export NEXTCLOUD_USER && echo $NEXTCLOUD_USER >> /root/nextcloud_user.txt
+
+NEXTCLOUD_PWD=$(pwgen 32 --secure --numerals --capitalize) && export NEXTCLOUD_PWD && echo $NEXTCLOUD_PWD >> /root/nextcloud_pwd.txt
+
+su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "$NEW_DB_NAME" --database-user "$NEW_DB_USER_NAME" --database-pass "$NEW_DB_PASSWORD" --admin-user "$NEXTCLOUD_USER" --admin-pass "$NEXTCLOUD_PWD"'
 
 ## References:
 ## https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
