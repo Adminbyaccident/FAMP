@@ -214,12 +214,6 @@ expect eof
 
 echo "$NEW_DATABASE"
 
-echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
-
-echo " Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
-
-echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
-
 # Install the missing PHP packages for MediaWiki
 pkg install -y php74-mbstring php74-curl php74-intl php74-gd php74-fileinfo texlive-base imagemagick7 mediawiki135-php74
 
@@ -228,6 +222,17 @@ service php-fpm restart
 
 # Change ownership of the MediaWiki directory
 chown -R www:www /usr/local/www/mediawiki
+
+# No one but root can read these files. Read only permissions.
+chmod 400 /root/db_root_pwd.txt
+chmod 400 /root/new_db_name.txt
+chmod 400 /root/new_db_user_name.txt
+chmod 400 /root/newdb_pwd.txt
+
+# Display the new database, username and password generated on MySQL
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Final message
 echo"
