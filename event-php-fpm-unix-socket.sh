@@ -116,6 +116,9 @@ echo "$SECURE_MYSQL"
 
 echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 
+# No one but root can read this file. Read only permissions.
+chmod 400 /root/db_root_pwd.txt
+
 ## References in the following URLS:
 
 ## https://www.digitalocean.com/community/tutorials/how-to-configure-apache-http-with-mpm-event-and-php-fpm-on-freebsd-12-0
