@@ -18,6 +18,8 @@ NEW_DB_USER_NAME=$(pwgen 10 --secure --numerals --capitalize) && export NEW_DB_U
 
 NEW_DB_PASSWORD=$(pwgen 32 --secure --numerals --capitalize) && export NEW_DB_PASSWORD && echo $NEW_DB_PASSWORD >> /root/newdb_pwd.txt
 
+DB_ROOT_PASSWORD=$(cat /root/db_root_pwd.txt) && export DB_ROOT_PASSWORD
+
 NEW_DATABASE=$(expect -c "
 set timeout 10
 spawn mysql -u root -p
@@ -37,12 +39,6 @@ expect eof
 ")
 
 echo "$NEW_DATABASE"
-
-echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
-
-echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
-
-echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Install PHP packages for Wordpress
 pkg install -y	php74\
@@ -121,6 +117,17 @@ cp -r /root/wordpress/* /usr/local/www/apache24/data
 
 # Change the ownership of the DocumentRoot path content from root to the Apache HTTP user (named www)
 chown -R www:www /usr/local/www/apache24/data
+
+# No one but root can read these files. Read only permissions.
+chmod 400 /root/db_root_pwd.txt
+chmod 400 /root/new_db_name.txt
+chmod 400 /root/new_db_user_name.txt
+chmod 400 /root/newdb_pwd.txt
+
+# Display the new database, username and password generated on MySQL to accomodate WordPress
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Actions on the CLI are now finished.
 echo 'Actions on the CLI are now finished. Please visit the ip/domain of the site with a browser and proceed with the install'
