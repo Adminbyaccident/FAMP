@@ -251,7 +251,7 @@ echo "
     ErrorLog "/var/log/nextcloud-error_log"
     CustomLog "/var/log/nextcloud-access_log" common
     Protocols h2 http/1.1
-    Include /usr/local/etc/apache24/extra/nexcloud-security.conf
+    Include /usr/local/etc/apache24/extra/nextcloud-security.conf
 </VirtualHost>" >> /usr/local/etc/apache24/extra/httpd-vhosts.conf
 
 # Create empty file to place the Security Rules later
