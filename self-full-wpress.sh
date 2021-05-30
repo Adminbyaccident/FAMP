@@ -247,12 +247,6 @@ expect eof
 
 echo "$NEW_DATABASE"
 
-echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
-
-echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
-
-echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
-
 # Install the missing PHP packages
 pkg install -y php74-bz2 php74-curl php74-gd php74-mbstring php74-pecl-mcrypt php74-openssl php74-pdo_mysql php74-zip php74-zlib
 
@@ -290,6 +284,19 @@ chown -R www:www /usr/local/www/apache24/data
 service apache24 restart
 service php-fpm restart
 service mysql-server restart
+
+# No one but root can read these files. Read only permissions.
+chmod 400 /root/db_root_pwd.txt
+chmod 400 /root/new_db_name.txt
+chmod 400 /root/new_db_user_name.txt
+chmod 400 /root/newdb_pwd.txt
+
+# Display the new database, username and password generated on MySQL to accomodate WordPress
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+
+echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Actions on the CLI are now finished.
 echo 'Actions on the CLI are now finished. Please visit the ip/domain of the site with a browser and proceed with the install'
