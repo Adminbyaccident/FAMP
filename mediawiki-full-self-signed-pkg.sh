@@ -187,18 +187,24 @@ echo "
 service apache24 restart
 
 # Create the database and user. Mind this is MySQL version 8
-# Mind we have Expect already installed on the system because of the previous scripts.
+
+NEW_DB_NAME=$(pwgen 8 --secure --numerals --capitalize) && export NEW_DB_NAME && echo $NEW_DB_NAME >> /root/new_db_name.txt
+
+NEW_DB_USER_NAME=$(pwgen 10 --secure --numerals --capitalize) && export NEW_DB_USER_NAME && echo $NEW_DB_USER_NAME >> /root/new_db_user_name.txt
+
+NEW_DB_PASSWORD=$(pwgen 32 --secure --numerals --capitalize) && export NEW_DB_PASSWORD && echo $NEW_DB_PASSWORD >> /root/newdb_pwd.txt
+
 NEW_DATABASE=$(expect -c "
 set timeout 10
 spawn mysql -u root -p
 expect \"Enter password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"CREATE DATABASE Cardona;\r\"
+send \"CREATE DATABASE $NEW_DB_NAME;\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"CREATE USER 'barrufeta'@'localhost' IDENTIFIED WITH mysql_native_password BY 'barrufetaXP-64';\r\"
+send \"CREATE USER '$NEW_DB_USER_NAME'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_DB_PASSWORD';\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"GRANT ALL PRIVILEGES ON Cardona.* TO 'barrufeta'@'localhost';\r\"
+send \"GRANT ALL PRIVILEGES ON $NEW_DB_NAME.* TO '$NEW_DB_USER_NAME'@'localhost';\r\"
 expect \"root@localhost \[(none)\]>\"
 send \"FLUSH PRIVILEGES;\r\"
 expect \"root@localhost \[(none)\]>\"
@@ -207,6 +213,12 @@ expect eof
 ")
 
 echo "$NEW_DATABASE"
+
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+
+echo " Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
 # Install the missing PHP packages for MediaWiki
 pkg install -y php74-mbstring php74-curl php74-intl php74-gd php74-fileinfo texlive-base imagemagick7 mediawiki135-php74
