@@ -169,12 +169,6 @@ expect eof
 
 echo "$NEW_DATABASE"
 
-echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
-
-echo " Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
-
-echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
-
 # Now Visit your server ip and finish the GUI install. 
 # Be aware of the default SQLite DB install. Select the MySQL option!!
 # https://yourserverip/nextcloud
@@ -193,6 +187,25 @@ su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "m
 TRUSTED_DOMAIN=$(ifconfig em0 | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
 
 su -m www -c 'php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value="$TRUSTED_DOMAIN"'
+
+# No one but root can read these files. Read only permissions.
+chmod 400 /root/db_root_pwd.txt
+chmod 400 /root/new_db_name.txt
+chmod 400 /root/new_db_user_name.txt
+chmod 400 /root/newdb_pwd.txt
+chmod 400 /root/nextcloud_user.txt
+chmod 400 /root/nextcloud_pwd.txt
+chmod 400 /root/trusted_domain.txt
+
+# Display the new database, username and password generated on MySQL
+echo "Display DB name, username and password location"
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
+
+# Display the automatically generated username and password for Nextcloud
+echo "Your Nextcloud username is written on this file /root/nextcloud_user.txt"
+echo "Your Nextcloud password is written on this file /root/nextcloud_pwd.txt"
 
 ## References:
 ## https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
