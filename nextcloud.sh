@@ -187,6 +187,13 @@ NEXTCLOUD_PWD=$(pwgen 32 --secure --numerals --capitalize) && export NEXTCLOUD_P
 
 su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "$NEW_DB_NAME" --database-user "$NEW_DB_USER_NAME" --database-pass "$NEW_DB_PASSWORD" --admin-user "$NEXTCLOUD_USER" --admin-pass "$NEXTCLOUD_PWD"'
 
+# Add your ip or domain name as a trusted domain for Nextcloud. Remember to adapt this to your needs. Otherwise a warning message will appear in your screen.
+# This setup doesn't use a domain name, it's ready to be used with an IP. Adjust the NIC name 'em0' here as convenient.
+
+TRUSTED_DOMAIN=$(ifconfig em0 | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
+
+su -m www -c 'php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value="$TRUSTED_DOMAIN"'
+
 ## References:
 ## https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
 ## Pending to write article at adminbyaccident.com
