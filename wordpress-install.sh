@@ -104,13 +104,16 @@ tar -zxvf latest.tar.gz
 cp /root/wordpress/wp-config-sample.php /root/wordpress/wp-config.php
 
 # Add the database name into the wp-config.php file
-sed -i -e 's/database_name_here/$NEW_DB_NAME/' /root/wordpress/wp-config.php
+NEW_DB=$(cat /root/new_db_name.txt) && export NEW_DB
+sed -i -e 's/database_name_here/'"$NEW_DB"'/g' /root/wordpress/wp-config.php
 
 # Add the username into the wp-config.php file
-sed -i -e 's/username_here/$NEW_DB_USER_NAME/' /root/wordpress/wp-config.php
+USER_NAME=$(cat /root/new_db_user_name.txt) && export USER_NAME
+sed -i -e 's/username_here/'"$USER_NAME"'/g' /root/wordpress/wp-config.php
 
 # Add the db password into the wp-config.php file
-sed -i -e 's/password_here/$NEW_DB_PASSWORD/' /root/wordpress/wp-config.php
+PASSWORD=$(cat /root/newdb_pwd.txt) && export PASSWORD
+sed -i -e 's/password_here/'"$PASSWORD"'/g' /root/wordpress/wp-config.php
 
 # Move the content of the wordpress file into the DocumentRoot path
 cp -r /root/wordpress/* /usr/local/www/apache24/data
