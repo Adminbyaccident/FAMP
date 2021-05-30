@@ -115,8 +115,6 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
-
 # Enable TLS connections with a self signed certificate. 
 # Key and certificate generation
 
@@ -169,10 +167,10 @@ service php-fpm restart
 
 # Install Nextcloud
 # Fetch Nextcloud
-fetch -o /usr/local/www/nextcloud-20.0.7.zip https://download.nextcloud.com/server/releases/nextcloud-20.0.7.zip
+fetch -o /usr/local/www/nextcloud-21.0.2.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.2.zip
 
 # Unzip Nextcloud
-unzip -d /usr/local/www/ /usr/local/www/nextcloud-20.0.7.zip
+unzip -d /usr/local/www/ /usr/local/www/nextcloud-21.0.2.zip
 
 # Change the ownership so the Apache user (www) owns it
 chown -R www:www /usr/local/www/nextcloud
@@ -436,6 +434,7 @@ chmod 400 /root/trusted_domain.txt
 
 # Display the new database, username and password generated on MySQL
 echo "Display DB name, username and password location"
+echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
 echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
 echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
