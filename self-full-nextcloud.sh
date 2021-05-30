@@ -408,7 +408,7 @@ echo "$NEW_DATABASE"
 
 echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
 
-echo " Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+echo "Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
 
 echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 
