@@ -264,9 +264,8 @@ tar -zxvf latest.tar.gz
 cp /root/wordpress/wp-config-sample.php /root/wordpress/wp-config.php
 
 # Add the database name into the wp-config.php file
-NEW_DB=$(cat  /root/new_db_name.txt) && export NEW_DB
+NEW_DB=$(cat /root/new_db_name.txt) && export NEW_DB
 sed -i -e 's/database_name_here/'"$NEW_DB"'/g' /root/wordpress/wp-config.php
-
 
 # Add the username into the wp-config.php file
 USER_NAME=$(cat /root/new_db_user_name.txt) && export USER_NAME
