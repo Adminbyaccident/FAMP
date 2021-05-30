@@ -52,10 +52,10 @@ pkg install -y php74-zip php74-mbstring php74-gd php74-zlib php74-curl php74-ope
 
 # Install Nextcloud
 # Fetch Nextcloud
-fetch -o /usr/local/www/nextcloud-20.0.1.zip https://download.nextcloud.com/server/releases/nextcloud-20.0.1.zip
+fetch -o /usr/local/www/nextcloud-21.0.2.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.2.zip
 
 # Unzip Nextcloud
-unzip -d /usr/local/www/ /usr/local/www/nextcloud-19.0.3.zip
+unzip -d /usr/local/www/ /usr/local/www/nextcloud-21.0.2.zip
 
 # Change the ownership so the Apache user (www) owns it
 chown -R www:www /usr/local/www/nextcloud
