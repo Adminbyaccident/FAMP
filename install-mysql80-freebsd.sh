@@ -57,6 +57,9 @@ echo "$SECURE_MYSQL"
 
 echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 
+# No one but root can read this file. Read only permissions.
+chmod 400 /root/db_root_pwd.txt
+
 # Remove the Expect package if not needed anymore
 # pkg remove -y expect
 
