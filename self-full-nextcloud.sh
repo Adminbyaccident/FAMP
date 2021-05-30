@@ -84,19 +84,22 @@ service mysql-server start
 service php-fpm start
 
 # Make the hideous 'safe' install for MySQL
-#!/bin/sh
+pkg install -y pwgen
+
+DB_ROOT_PASSWORD=$(pwgen 32 --secure --numerals --capitalize) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD >> /root/db_root_pwd.txt
 
 SECURE_MYSQL=$(expect -c "
 set timeout 10
+set DB_ROOT_PASSWORD "$DB_ROOT_PASSWORD"
 spawn mysql_secure_installation
 expect \"Press y|Y for Yes, any other key for No:\"
 send \"y\r\"
 expect \"Please enter 0 = LOW, 1 = MEDIUM and 2 = STRONG:\"
 send \"0\r\"
 expect \"New password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"Re-enter new password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) :\"
 send \"Y\r\"
 expect \"Remove anonymous users?\"
@@ -112,6 +115,7 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
+echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 
 # Enable TLS connections with a self signed certificate. 
 # Key and certificate generation
@@ -376,18 +380,23 @@ RewriteRule ^(.*)$ - [F]
 service apache24 restart
 
 # Create the database for Nextcloud and user. Mind this is MySQL version 8
-# Mind we have Expect already installed on the system because of the previous scripts.
+NEW_DB_NAME=$(pwgen 8 --secure --numerals --capitalize) && export NEW_DB_NAME && echo $NEW_DB_NAME >> /root/new_db_name.txt
+
+NEW_DB_USER_NAME=$(pwgen 10 --secure --numerals --capitalize) && export NEW_DB_USER_NAME && echo $NEW_DB_USER_NAME >> /root/new_db_user_name.txt
+
+NEW_DB_PASSWORD=$(pwgen 32 --secure --numerals --capitalize) && export NEW_DB_PASSWORD && echo $NEW_DB_PASSWORD >> /root/newdb_pwd.txt
+
 NEW_DATABASE=$(expect -c "
 set timeout 10
 spawn mysql -u root -p
 expect \"Enter password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"CREATE DATABASE Nextcloud;\r\"
+send \"CREATE DATABASE $NEW_DB_NAME;\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"CREATE USER 'barrufeta'@'localhost' IDENTIFIED WITH mysql_native_password BY 'barrufetaXP-64';\r\"
+send \"CREATE USER '$NEW_DB_USER_NAME'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_DB_PASSWORD';\r\"
 expect \"root@localhost \[(none)\]>\"
-send \"GRANT ALL PRIVILEGES ON Nextcloud.* TO 'barrufeta'@'localhost';\r\"
+send \"GRANT ALL PRIVILEGES ON $NEW_DB_NAME.* TO '$NEW_DB_USER_NAME'@'localhost';\r\"
 expect \"root@localhost \[(none)\]>\"
 send \"FLUSH PRIVILEGES;\r\"
 expect \"root@localhost \[(none)\]>\"
@@ -397,15 +406,30 @@ expect eof
 
 echo "$NEW_DATABASE"
 
+echo "Your NEW_DB_NAME is written on this file /root/new_db_name.txt"
+
+echo " Your NEW_DB_USER_NAME is written on this file /root/new_db_user_name.txt"
+
+echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
+
 # Now Visit your server ip and finish the GUI install. 
 # Be aware of the default SQLite DB install. Select the MySQL option!!
-# https://yourserverip/
+# https://yourserverip/nextcloud
 
-# If you want to make the install through the script just tune the DB values above and the values just below.
-su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "Nextcloud" --database-user "barrufeta" --database-pass "barrufetaXP-64" --admin-user "albert" --admin-pass "albert"'
+# Automatic NextCloud install using MySQL instead of the default SQLite
+
+NEXTCLOUD_USER=$(pwgen 10 --secure --numerals --capitalize) && export NEXTCLOUD_USER && echo $NEXTCLOUD_USER >> /root/nextcloud_user.txt
+
+NEXTCLOUD_PWD=$(pwgen 32 --secure --numerals --capitalize) && export NEXTCLOUD_PWD && echo $NEXTCLOUD_PWD >> /root/nextcloud_pwd.txt
+
+su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "$NEW_DB_NAME" --database-user "$NEW_DB_USER_NAME" --database-pass "$NEW_DB_PASSWORD" --admin-user "$NEXTCLOUD_USER" --admin-pass "$NEXTCLOUD_PWD"'
 
 # Add your ip or domain name as a trusted domain for Nextcloud. Remember to adapt this to your needs. Otherwise a warning message will appear in your screen.
-su -m www -c 'php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value="192.168.1.192"'
+# This setup doesn't use a domain name, it's ready to be used with an IP. Adjust the NIC name 'em0' here as convenient.
+
+TRUSTED_DOMAIN=$(ifconfig em0 | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
+
+su -m www -c 'php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value="$TRUSTED_DOMAIN"'
 
 ## References:
 ## https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
