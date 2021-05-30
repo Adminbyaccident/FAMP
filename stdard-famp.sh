@@ -52,17 +52,23 @@ cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 service apache24 start
 service mysql-server start
 
+# Configure MySQL with the mysql_secure_installation script.
+pkg install -y pwgen
+
+DB_ROOT_PASSWORD=$(pwgen 32 --secure --numerals --capitalize) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD >> /root/db_root_pwd.txt
+
 SECURE_MYSQL=$(expect -c "
 set timeout 10
+set DB_ROOT_PASSWORD "$DB_ROOT_PASSWORD"
 spawn mysql_secure_installation
 expect \"Press y|Y for Yes, any other key for No:\"
 send \"y\r\"
 expect \"Please enter 0 = LOW, 1 = MEDIUM and 2 = STRONG:\"
 send \"0\r\"
 expect \"New password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"Re-enter new password:\"
-send \"albertXP-24\r\"
+send \"$DB_ROOT_PASSWORD\r\"
 expect \"Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) :\"
 send \"Y\r\"
 expect \"Remove anonymous users?\"
@@ -77,6 +83,8 @@ expect eof
 ")
 
 echo "$SECURE_MYSQL"
+
+echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt"
 
 ## References in the following URLs:
 
