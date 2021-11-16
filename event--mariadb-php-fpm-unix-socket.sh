@@ -67,7 +67,7 @@ gsed -i 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.co
 gsed -i 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
 gsed -i 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
-# Install MySQL
+# Install MariaDB
 echo "Installing MariaDB"
 pkg install -y mariadb105-server mariadb105-client
 
@@ -78,7 +78,7 @@ service mysql-server start
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
 
-# Make the hideous 'safe' install for MySQL
+# Make the 'safe' install for MariaDB
 echo "Performing MariaDB secure install"
 
 SECURE_MARIADB=$(expect -c "
