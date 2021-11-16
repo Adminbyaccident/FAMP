@@ -19,17 +19,8 @@ pkg install -y apache24
 # Add service to be fired up at boot time
 sysrc apache24_enable="YES"
 
-# Install MySQL
-pkg install -y mysql80-server
-
-# Add service to be fired up at boot time
-sysrc mysql_enable="YES"
-
 # Install PHP 7.4 and its 'funny' dependencies
 pkg install -y php74 php74-mysqli php74-extensions
-
-# Install the 'old fashioned' Expect to automate the mysql_secure_installation part
-pkg install -y expect
 
 # Set a ServerName directive in Apache HTTP. Place a name to your server.
 sed -i -e 's/#ServerName www.example.com:80/ServerName Famptest/g' /usr/local/etc/apache24/httpd.conf
