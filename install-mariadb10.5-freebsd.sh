@@ -1,10 +1,31 @@
 #!/bin/sh
-
-# Instructions on how to use this script 
-
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: install-mariadb10.5-freebsd.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 05-06-2021
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: FreeBSD 12/13
+#
+# PURPOSE: This script installs MariaDB 10.5
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
+
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # Change the default pkg repository from quarterly to latest
 echo "Configuring PKG"
