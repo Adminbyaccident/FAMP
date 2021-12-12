@@ -9,9 +9,9 @@
 # SET FOR: Production
 # (For Alpha, Beta, Dev, Test and Production)
 #
-# PLATFORM: CentOS 8 / RHEL 8
+# PLATFORM: FreeBSD 12/13
 #
-# PURPOSE: This is an install script for MySQL 8 on CentOS 8
+# PURPOSE: This is a hardening script for Apache HTTP
 #
 # REV LIST:
 # DATE: 12-12-2021
