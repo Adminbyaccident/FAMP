@@ -1,10 +1,31 @@
 #!/bin/sh
-
-# Instructions on how to use this script 
-
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: self-full-wpress.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 06-02-2021
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: FreeBSD 12/13
+#
+# PURPOSE: This script installs a FAMP stack with a WordPress install on top + self signed certificates
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
+
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # This is a full Wordpress install on:
 # FreeBSD 12 + Apache 2.4 latest pkg + MySQL 8 + PHP 7.4
