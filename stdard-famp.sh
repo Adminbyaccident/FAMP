@@ -1,10 +1,31 @@
 #!/bin/sh
-
-# Instructions on how to use this script 
-
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: stdard-famp.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 23-090-2019
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: FreeBSD 12/13
+#
+# PURPOSE: This script installs a FAMP stack configured with Pre-fork MPM and mod_php.
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
+
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # Update packages list
 pkg update
