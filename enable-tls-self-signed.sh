@@ -9,7 +9,7 @@
 # SET FOR: Production
 # (For Alpha, Beta, Dev, Test and Production)
 #
-# PLATFORM: CentOS 8 / RHEL 8
+# PLATFORM: FreeBSD 12/13
 #
 # PURPOSE: This script will enable a self-signed certificate and key pair on an already existing FAMP stack box.
 #
