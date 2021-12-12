@@ -1,12 +1,31 @@
-#!/bin/sh
-
-# Instructions on how to use this script 
-
+#!/usr/bin/bash
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: enable-tls-self-signed.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 13-10-2021
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: CentOS 8 / RHEL 8
+#
+# PURPOSE: This script will enable a self-signed certificate and key pair on an already existing FAMP stack box.
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
 
-# This script will enable a self-signed certificate and key pair on an already existing FAMP stack box.
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # Enable the SSL/TLS module
 sed -i -e '/mod_ssl.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
