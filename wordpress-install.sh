@@ -1,10 +1,31 @@
 #!/bin/sh
-
-# Instructions on how to use this script 
-
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: wordpress-install.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 28-10-2019
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: FreeBSD 12/13
+#
+# PURPOSE: This script installs WordPress and assumes an existing FAMP stack.
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
+
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # Install Wordpress on FreeBSD after having used the following scripts:
 # event-php-fpm.sh
