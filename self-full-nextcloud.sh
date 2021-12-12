@@ -1,10 +1,31 @@
 #!/bin/sh
-
-# Instructions on how to use this script 
-
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: self-full-nextcloud.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 06-02-2021
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: FreeBSD 12/13
+#
+# PURPOSE: This script installs a FAMP stack with a NextCloud install on top.
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
+
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # This script will install a Nextcloud instance on a FreeBSD box.
 
