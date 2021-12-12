@@ -1,10 +1,31 @@
-#!/bin/sh
-
-# Instructions on how to use this script 
-
+#!/usr/bin/bash
+# Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
-
 # sudo ./SCRIPTNAME.sh
+#
+# SCRIPT: apache_tls_self-signed.sh
+# AUTHOR: ALBERT VALBUENA
+# DATE: 06-02-2021
+# SET FOR: Production
+# (For Alpha, Beta, Dev, Test and Production)
+#
+# PLATFORM: FreeBSD 12/13
+#
+# PURPOSE: Self signed TLS certificate generation for Apache HTTP + redirection to HTTPS
+#
+# REV LIST:
+# DATE: 12-12-2021
+# BY: ALBERT VALBUENA
+# MODIFICATION: 12-12-2021
+#
+#
+# set -n # Uncomment to check your syntax, without execution.
+# # NOTE: Do not forget to put the comment back in or
+# # the shell script will not execute!
+
+##########################################################
+################ BEGINNING OF MAIN #######################
+##########################################################
 
 # This script does:
 # Creates a Self Signed certificate using OpenSSL
@@ -12,16 +33,13 @@
 # Enables the default TLS configuration found on Apache HTTP for FreeBSD
 # Enables the Rewrite module on Apache HTTP
 # Applies the redirect from HTTP to HTTPS
+# IMPORTANT: Assumes Apache HTTP is installed. If not uncomment the install section.
 
+# Uncomment if the latest packages are needed instead of the quarterly released ones.
+# sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
+# pkg upgrade -y
 
 ####### Start of the Apache HTTP install section #######
-# In case you haven't got Apache HTTP installed yet uncomment this section below
-# Change the default pkg repository from quarterly to latest
-# sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
- 
-#Update packages (it will first download the pkg repo from latest)
-# secondly it will upgrade any installed packages.
-# pkg upgrade -y
 
 # Install Apache
 # pkg install -y apache24
@@ -31,36 +49,14 @@
 
 # Start Apache HTTP
 # service apache24 start
-#
+
 ####### End of the Apache HTTP install section #######
 
 
 # 1. Key and certificate generation
-# Because this is a process where manual interaction is required let's make use of Expect so no hands are needed.
-
-pkg install -y expect
-
-SECURE_APACHE=$(expect -c "
-set timeout 10
-spawn openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt
-expect \"Country Name (2 letter code) \[AU\]:\"
-send \"ES\r\"
-expect \"State or Province Name (full name) \[Some-State\]:\"
-send \"Barcelona\r\"
-expect \"Locality Name (eg, city) \[\]:\"
-send \"Terrassa\r\"
-expect \"Organization Name (eg, company) \[Internet Widgits Pty Ltd\]:\"
-send \"Adminbyaccident.com\r\"
-expect \"Organizational Unit Name (eg, section) \[\]:\"
-send \"Operations\r\"
-expect \"Common Name (e.g. server FQDN or YOUR name) \[\]:\"
-send \"Albert Valbuena\r\"
-expect \"Email Address \[\]:\"
-send \"thewhitereflex@gmail.com\r\"
-expect eof
-")
-
-echo "$SECURE_APACHE"
+# Create a self-signed certificate and key for Apache HTTP 
+# IMPORTANT: Pleasdo do adapt the fields below like: Organization, Common Name and Email, etc.
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt -subj "/C=ES/ST=Barcelona/L=Terrassa/O=Adminbyaccident.com/CN=example.com/emailAddress=youremail@gmail.com"
 
 # 2.- Enable TLS connections in the Apache HTTP web server.
 sed -i -e '/mod_ssl.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
