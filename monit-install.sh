@@ -74,6 +74,12 @@ cat /usr/local/etc/monit.d/server.crt /usr/local/etc/monit.d/server.key > /usr/l
 
 chmod 400 /usr/local/etc/monit.d/server.pem
 
+# Configure email for alerts:
+sed -i -e '/receive all alerts/s/# set alert sysadm@foo.bar/set alert youremail@gmail.com/' /usr/local/etc/monitrc
+
+# Configure services monitoring
+
+# Monitor Apache HTTP
 echo '
 check process apache with pidfile /var/run/httpd.pid
         start program = "/usr/local/etc/rc.d/apache24 start" with timeout 60 seconds
