@@ -98,6 +98,7 @@ echo '
 include /usr/local/etc/monit.d/monit.httpd
 ' >> /usr/local/etc/monitrc
 
+# Monitor MySQL/MariaDB
 echo '
 check process mysqld with pidfile /var/run/mysql/mysqld.pid
 	start program = "/usr/local/etc/rc.d/mysql-server start" with timeout 60 seconds
@@ -116,6 +117,7 @@ echo '
 include /usr/local/etc/monit.d/monit.mysqld
 ' >> /usr/local/etc/monitrc	
 
+# Monitor PHP-FPM
 echo '
 check process php-fpm with pidfile /var/run/php-fpm.pid
 	start program = "/usr/local/etc/rc.d/php-fpm start" with timeout 60 seconds
@@ -134,6 +136,7 @@ echo '
 include /usr/local/etc/monit.d/monit.php-fpm
 ' >> /usr/local/etc/monitrc	
 
+# Monitor Redis
 echo '	
 check process redis with pidfile /var/run/redis/redis.pid
 	start program = "/usr/local/etc/rc.d/redis start" with timeout 60 seconds
@@ -152,6 +155,7 @@ echo '
 include /usr/local/etc/monit.d/monit.redis
 ' >> /usr/local/etc/monitrc	
 
+# Monitor Fail2ban
 echo '
 check process fail2ban with pidfile /var/run/fail2ban/fail2ban.pid
 	start program = "/usr/local/etc/rc.d/fail2ban start" with timeout 60 seconds
