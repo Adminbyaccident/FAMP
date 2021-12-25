@@ -14,9 +14,9 @@
 # PURPOSE: This script installs MariaDB 10.5
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 25-12-2021
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 25-12-2021
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
