@@ -93,8 +93,8 @@ service apache24 restart
 # Install a cron job so the geolocation database from MaxMind is regularly updated.
 crontab -l > /root/cronjob.txt
 echo '
-# Uncomment the SHELL and PATH variables if there's no cron job already in place. 
-# Use crontab -l to check if there's any cron job.
+# Uncomment the SHELL and PATH variables if there is no cron job already in place. 
+# Use crontab -l to check if there is any cron job.
 # SHELL=/bin/sh
 # PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin
 # Order of crontab fields
