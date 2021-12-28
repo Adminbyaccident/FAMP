@@ -37,6 +37,7 @@ LicenseKey='write_your_maxmind_key_here'
 # Countries to block. 
 # Full country codes list: https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
 # Example: China='SetEnvIf MM_COUNTRY_CODE ^(CN) BlockCountry'
+# Uncomment and add as many lines below as you need.
 # Country_1='SetEnvIf MM_COUNTRY_CODE ^(CN) BlockCountry'
 # Country_2='SetEnvIf MM_COUNTRY_CODE ^(XX) BlockCountry'
 # Add as many countries as needed here and in the 200_mod_maxmindb.conf file directives.
