@@ -70,6 +70,7 @@ pkg install -y ap24-mod_maxminddb
 # Create the configuration file for the module
 touch /usr/local/etc/apache24/modules.d/200_mod_maxmindb.conf
 
+# Configure Apache HTTP to use the MaxMindDB module
 echo "
 LoadModule maxminddb_module /usr/local/libexec/apache24/mod_maxminddb.so
 
