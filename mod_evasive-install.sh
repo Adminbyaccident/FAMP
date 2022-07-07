@@ -14,9 +14,9 @@
 # PURPOSE: This script installs mode_evasive in Apache HTTP on FreeBSD using IPFW
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 07-07-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 07-07-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
