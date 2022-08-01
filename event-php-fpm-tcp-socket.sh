@@ -14,9 +14,9 @@
 # PURPOSE: This script installs a full FAMP stack with Apache HTTP configured with MPM as Event + MySQL 8 + PHP-FPM configured to read from the TCP socket
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 01-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 01-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -46,8 +46,8 @@ pkg install -y mysql80-server mysql80-client
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.4 and its 'funny' dependencies
-pkg install -y php74 php74-mysqli php74-extensions
+# Install PHP 8.1 and its 'funny' dependencies
+pkg install -y php81 php81-mysqli php81-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
