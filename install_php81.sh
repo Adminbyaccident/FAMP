@@ -40,17 +40,14 @@ pkg install -y php81 php81-extensions
 # Configure PHP to production settings
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
-# Install GNUsed in order to more easily edit files
-pkg install -y gsed
-
 # Configure PHP not to run arbitrary code by mistake
-gsed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /usr/local/etc/php.ini
+sed -i -e 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /usr/local/etc/php.ini
 
 # Configure PHP-FPM to use a UNIX socket instead of a TCP one
 # This configuration is better for standalone boxes
-gsed -i 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
 # Enable PHP-FPM to start at boot time
 sysrc php_fpm_enable="YES"
