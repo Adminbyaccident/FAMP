@@ -14,9 +14,9 @@
 # PURPOSE: This script installs a full FAMP stack with Apache HTTP configured with MPM as Event + MariaDB + PHP-FPM configured to read from the UNIX socket
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 01-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 01-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -41,7 +41,7 @@ pkg install -y apache24
 sysrc apache24_enable="YES"
 
 # Install PHP 7.4 and its 'funny' dependencies
-pkg install -y php74 php74-mysqli php74-extensions
+pkg install -y php81 php81-mysqli php81-extensions
 
 # Set a ServerName directive in Apache HTTP. Place a name to your server.
 sed -i -e 's/#ServerName www.example.com:80/ServerName Famptest/g' /usr/local/etc/apache24/httpd.conf
