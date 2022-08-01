@@ -155,9 +155,6 @@ service apache24 restart
 # Enable VirtualHosts
 sed -i -e '/httpd-vhosts/s/#Include/Include/' /usr/local/etc/apache24/httpd.conf
 
-# Restart Apache HTTP to make changes effective
-service apache24 restart
-
 # Inform the user SSL/TLS and VirtualHosts are now enabled on this server.
 echo "SSL/TLS and VirtualHosts have been enabled on this server"
 
