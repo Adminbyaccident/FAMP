@@ -226,7 +226,7 @@ gsed -i '271i\    </LimitExcept>' /usr/local/etc/apache24/httpd.conf
 service apache24 restart
 
 
-# Create the database and user. Mind this is MySQL version 8
+# Create the database and user. Mind this is MariaDB.
 pkg install -y pwgen
 
 touch /root/new_db_name.txt
