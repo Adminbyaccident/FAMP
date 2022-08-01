@@ -14,9 +14,9 @@
 # PURPOSE: This script installs MediaWiki from the originon top of a FAMP stack reading on UNIX socket
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 01-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 01-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -40,14 +40,14 @@ pkg install -y apache24
 # Add service to be fired up at boot time
 sysrc apache24_enable="YES"
 
-# Install MySQL
-pkg install -y mysql80-server
+# Install MySQL 8.0
+pkg install -y mysql80-server mysql80-client
 
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.4 and its 'funny' dependencies
-pkg install -y php74 php74-mysqli php74-extensions
+# Install PHP 8.1 and its 'funny' dependencies
+pkg install -y php81 php81-mysqli php81-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
@@ -88,15 +88,11 @@ echo "
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
-# Install GNU Sed
-pkg install -y gsed
-
 # Configure PHP-FPM to use a UNIX socket instead of a TCP one
 # This configuration is better for standalone boxes
-gsed -i 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
-
+sed -i -e 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
 # Fire up the services
 service apache24 start
@@ -156,9 +152,6 @@ service apache24 restart
 # Enable VirtualHosts
 sed -i -e '/httpd-vhosts/s/#Include/Include/' /usr/local/etc/apache24/httpd.conf
 
-# Restart Apache HTTP to make changes effective
-service apache24 restart
-
 # Inform the user SSL/TLS and VirtualHosts are now enabled on this server.
 echo "SSL/TLS and VirtualHosts have been enabled on this server"
 
@@ -181,7 +174,6 @@ echo "
     RewriteRule ^/?(.*) https://%{SERVER_NAME}/\$1 [R,L]
     Protocols h2 h2c http/1.1
 </VirtualHost>
-
 <VirtualHost *:443>
     ServerAdmin admin@your-domain.com
     ServerName mediawiki
@@ -201,9 +193,6 @@ echo "
     CustomLog /var/log/mediawiki_access common
 </VirtualHost>
 " >> /usr/local/etc/apache24/extra/httpd-vhosts.conf
-
-# Restart Apache HTTP to enable the changes
-service apache24 restart
 
 # Create the database and user. Mind this is MySQL version 8
 NEW_DB_NAME=$(pwgen 8 --secure --numerals --capitalize) && export NEW_DB_NAME && echo $NEW_DB_NAME >> /root/new_db_name.txt
@@ -232,26 +221,35 @@ expect eof
 
 echo "$NEW_DATABASE"
 
+# Progress message
+echo "The PHP dependencies for MediaWiki are being installed."
+
 # Install the missing PHP packages for MediaWiki
-pkg install -y php74-mbstring php74-curl php74-intl php74-gd php74-fileinfo texlive-base imagemagick7
+pkg install -y php81-mbstring php81-curl php81-intl php81-gd php81-fileinfo texlive-base imagemagick7
 
 # Restart the PHP-FPM service to reload with the recenyly installed PHP packages
 service php-fpm restart
 
+# Progress message
+echo "MediaWiki is being downloaded and pre-configured for installation."
+
 # Download MediaWiki
-fetch -o /tmp https://releases.wikimedia.org/mediawiki/1.35/mediawiki-1.35.1.tar.gz 
+fetch -o /tmp https://releases.wikimedia.org/mediawiki/1.38/mediawiki-1.38.2.tar.gz 
 
 # Unpack the tarball
-tar -zxf /tmp/mediawiki-1.35.1.tar.gz -C /tmp
+tar -zxf /tmp/mediawiki-1.38.2.tar.gz -C /tmp
 
 # Take the MediaWiki files to its new location
-mv /tmp/mediawiki-1.35.1 /usr/local/www/
+mv /tmp/mediawiki-1.38.2 /usr/local/www/
 
 # Change the mediawiki directory name
-mv /usr/local/www/mediawiki-1.35.1 /usr/local/www/mediawiki
+mv /usr/local/www/mediawiki-1.38.2 /usr/local/www/mediawiki
 
 # Change ownership of the MediaWiki directory
 chown -R www:www /usr/local/www/mediawiki
+
+# Restart Apache HTTP to enable the changes
+service apache24 restart
 
 # No one but root can read these files. Read only permissions.
 chmod 400 /root/db_root_pwd.txt
