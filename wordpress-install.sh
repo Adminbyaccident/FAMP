@@ -14,9 +14,9 @@
 # PURPOSE: This script installs WordPress and assumes an existing FAMP stack.
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 01-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 01-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -62,43 +62,40 @@ expect eof
 echo "$NEW_DATABASE"
 
 # Install PHP packages for Wordpress
-pkg install -y	php74\
-		php74-bcmath\
-		php74-bz2\
-		php74-ctype\
-		php74-curl\
-		php74-dom\
-		php74-exif\
-		php74-extensions\
-		php74-fileinfo\
-		php74-filter\
-		php74-ftp\
-		php74-gd\
-		php74-iconv\
-		php74-intl\
-		php74-json\
-		php74-mbstring\
-		php74-mysqli\
-		php74-opcache\
-		php74-openssl\
-		php74-pdo\
-		php74-pdo_mysql\
-		php74-pdo_sqlite\
-		php74-pecl-mcrypt\
-		php74-phar\
-		php74-posix\
-		php74-session\
-		php74-simplexml\
-		php74-soap\
-		php74-sockets\
-		php74-sqlite3\
-		php74-tokenizer\
-		php74-xml\
-		php74-xmlreader\
-		php74-xmlrpc\
-		php74-xmlwriter\
-		php74-zip\
-		php74-zlib
+pkg install -y	php81\
+		php81-bcmath\
+		php81-bz2\
+		php81-ctype\
+		php81-curl\
+		php81-dom\
+		php81-exif\
+		php81-extensions\
+		php81-fileinfo\
+		php81-filter\
+		php81-ftp\
+		php81-gd\
+		php81-iconv\
+		php81-intl\
+		php81-mbstring\
+		php81-mysqli\
+		php81-opcache\
+		php81-pdo\
+		php81-pdo_mysql\
+		php81-pdo_sqlite\
+		php81-pecl-mcrypt\
+		php81-phar\
+		php81-posix\
+		php81-session\
+		php81-simplexml\
+		php81-soap\
+		php81-sockets\
+		php81-sqlite3\
+		php81-tokenizer\
+		php81-xml\
+		php81-xmlreader\
+		php81-xmlwriter\
+		php81-zip\
+		php81-zlib
 
 # Load the new PHP modules
 service php-fpm restart
@@ -116,7 +113,7 @@ sed -i -e '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/ht
 service apache24 restart
 
 # Fetch Wordpress from the official site
-fetch https://wordpress.org/latest.tar.gz
+fetch -o /root https://wordpress.org/latest.tar.gz
 
 # Unpack Wordpress
 tar -zxvf latest.tar.gz
