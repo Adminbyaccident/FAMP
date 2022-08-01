@@ -40,13 +40,13 @@ pkg install -y apache24
 # Add service to be fired up at boot time
 sysrc apache24_enable="YES"
 
-# Install MySQL
+# Install MySQL 8.0
 pkg install -y mysql80-server
 
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.4 and its 'funny' dependencies
+# Install PHP 8.1 and its 'funny' dependencies
 pkg install -y php81 php81-mysqli php81-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
@@ -88,14 +88,11 @@ echo "
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
-# Install GNU Sed
-pkg install -y gsed
-
 # Configure PHP-FPM to use a UNIX socket instead of a TCP one
 # This configuration is better for standalone boxes
-gsed -i 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
 
 # Fire up the services
