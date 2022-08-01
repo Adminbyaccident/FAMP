@@ -14,9 +14,9 @@
 # PURPOSE: This script installs PHP 8
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 01-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 01-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -34,8 +34,8 @@ sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
 # secondly it will upgrade any installed packages.
 pkg upgrade -y
 
-# Install PHP 8.0
-pkg install -y php80 php80-extensions
+# Install PHP 8.1
+pkg install -y php81 php81-extensions
 
 # Configure PHP to production settings
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
@@ -59,7 +59,7 @@ sysrc php_fpm_enable="YES"
 service php-fpm start
 
 echo "
-PHP 8.0 has been installed
+PHP 8.1 has been installed
 "
 
 ## EOF
