@@ -11,12 +11,12 @@
 #
 # PLATFORM: FreeBSD 12/13
 #
-# PURPOSE: This script installs MariaDB 10.5
+# PURPOSE: This script installs MariaDB 10.6
 #
 # REV LIST:
-# DATE: 25-12-2021
+# DATE: 01-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 25-12-2021
+# MODIFICATION: 01-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -38,7 +38,7 @@ pkg upgrade -y
 
 # Install MySQL
 echo "Installing MariaDB"
-pkg install -y mariadb105-server mariadb105-client
+pkg install -y mariadb106-server mariadb106-client
 
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
