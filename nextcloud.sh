@@ -14,9 +14,9 @@
 # PURPOSE: This script installs NextCloud assuming a FAMP stack is already installed.
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 03-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 03-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -69,14 +69,14 @@ pkg install -y bash pwgen expect
 sed -i -e '/memory_limit/s/128M/512M/' /usr/local/etc/php.ini
 
 # Install specific PHP dependencies for Nextcloud
-pkg install -y php74-zip php74-mbstring php74-gd php74-zlib php74-curl php74-openssl php74-pdo_mysql php74-pecl-imagick php74-intl php74-bcmath php74-gmp php74-fileinfo
+pkg install -y php81-zip php81-mbstring php81-gd php81-zlib php81-curl php81-pdo_mysql php81-pecl-imagick php81-intl php81-bcmath php81-gmp php81-fileinfo
 
 # Install Nextcloud
 # Fetch Nextcloud
-fetch -o /usr/local/www/nextcloud-21.0.2.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.2.zip
+fetch -o /usr/local/www https://download.nextcloud.com/server/releases/nextcloud-24.0.3.zip
 
 # Unzip Nextcloud
-unzip -d /usr/local/www/ /usr/local/www/nextcloud-21.0.2.zip
+unzip -d /usr/local/www/ /usr/local/www/nextcloud-24.0.3.zip
 
 # Change the ownership so the Apache user (www) owns it
 chown -R www:www /usr/local/www/nextcloud
@@ -110,27 +110,23 @@ echo "
 # Virtual Hosts
 #
 # Required modules: mod_log_config
-
 # If you want to maintain multiple domains/hostnames on your
 # machine you can setup VirtualHost containers for them. Most configurations
 # use only name-based virtual hosts so the server doesn't need to worry about
 # IP addresses. This is indicated by the asterisks in the directives below.
 #
-
 # Please see the documentation at
 # <URL:http://httpd.apache.org/docs/2.4/vhosts/>
 # for further details before you try to setup virtual hosts.
 #
 # You may use the command line option '-S' to verify your virtual host
 # configuration.
-
 #
 # VirtualHost example:
 # Almost any Apache directive may go into a VirtualHost container.
 # The first VirtualHost section is used for all requests that do not
 # match a ServerName or ServerAlias in any <VirtualHost> block.
 #
-
 <VirtualHost *:80>
     ServerName Nextcloud
     ServerAlias Nextcloud
@@ -142,7 +138,6 @@ echo "
     RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
     Protocols h2 h2c http/1.1
 </VirtualHost>
-
 <VirtualHost *:443>
     ServerName Nextcloud
     ServerAlias Nextcloud
@@ -205,9 +200,9 @@ NEXTCLOUD_PWD=$(pwgen 32 --secure --numerals --capitalize) && export NEXTCLOUD_P
 su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "$NEW_DB_NAME" --database-user "$NEW_DB_USER_NAME" --database-pass "$NEW_DB_PASSWORD" --admin-user "$NEXTCLOUD_USER" --admin-pass "$NEXTCLOUD_PWD"'
 
 # Add your ip or domain name as a trusted domain for Nextcloud. Remember to adapt this to your needs. Otherwise a warning message will appear in your screen.
-# This setup doesn't use a domain name, it's ready to be used with an IP. Adjust the NIC name 'em0' here as convenient.
+# This setup doesn't use a domain name, it's ready to be used with an IP. Adjust the NIC name with 'em0' or similar here if it's convenient.
 
-TRUSTED_DOMAIN=$(ifconfig em0 | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
+TRUSTED_DOMAIN=$(ifconfig | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
 
 su -m www -c 'php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value="$TRUSTED_DOMAIN"'
 
