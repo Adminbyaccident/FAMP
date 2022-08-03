@@ -6,7 +6,7 @@
 # SCRIPT: self-full-nextcloud.sh
 # AUTHOR: ALBERT VALBUENA
 # DATE: 06-02-2021
-# SET FOR: Production
+# SET FOR: Test
 # (For Alpha, Beta, Dev, Test and Production)
 #
 # PLATFORM: FreeBSD 12/13
@@ -14,9 +14,9 @@
 # PURPOSE: This script installs a FAMP stack with a NextCloud install on top.
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 03-08-2022
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 03-08-2022
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -27,7 +27,64 @@
 ################ BEGINNING OF MAIN #######################
 ##########################################################
 
-# This script will install a Nextcloud instance on a FreeBSD box.
+# Message for the user before anything is done
+echo "Make sure you have set this script with the correct -subj content, such as country, state, city, organization name, common name and email before its first use."
+
+echo "In other words, don't use this script blindly without changing the -subj content first. Press Ctrl C to cancel this operation if in need. You have 15 seconds."
+
+sleep 15
+
+# Create the CA directory
+mkdir /usr/local/tls
+
+# Generate the CA primary key
+echo "Generating the CA primary key"
+openssl genrsa 2048 > /usr/local/tls/ca-key.pem
+
+# Generate the CA certificate from the primary key
+echo "Producing the primary certificate with the CA's key."
+openssl req -new -x509 -nodes -days 730 -key /usr/local/tls/ca-key.pem -out /usr/local/tls/ca-cert.pem -subj "/C=US/ST=State/L=City/O=Adminbyaccident Ltd/CN=example.com/emailAddress=youremail@anymail.com"
+
+# Generate the server's key and certificate pair
+echo "Generating serve's key and certificate pair."
+
+# 1.- Generate a new key for the server plus a certificate request
+openssl req -newkey rsa:2048 -days 730 -nodes -keyout /usr/local/tls/server-key.pem -out /usr/local/tls/server-req.pem -subj "/C=US/ST=State/L=City/O=Adminbyaccident Ltd/CN=example.com/emailAddress=youremail@anymail.com"
+
+# 2.- Strip out the passphrase within the key
+openssl rsa -in /usr/local/tls/server-key.pem -out /usr/local/tls/server-key.pem
+
+# 3.- Generate the server's certificate via the x509 protocol from the cert request plus the server's key with a serial number.
+openssl x509 -req -in /usr/local/tls/server-req.pem -days 730 -CA /usr/local/tls/ca-cert.pem -CAkey /usr/local/tls/ca-key.pem -set_serial 01 -out /usr/local/tls/server-cert.pem
+
+echo "Server's certificate and key pair have been generated."
+
+# Generate the client's certificate and key pairs
+echo "Generating client's key and certificate pair."
+
+# 1.- Generate a new key for the client plus a certificate request
+openssl req -newkey rsa:2048 -days 730 -nodes -keyout /usr/local/tls/client-key.pem -out /usr/local/tls/client-req.pem -subj "/C=US/ST=State/L=City/O=Adminbyaccident Ltd/CN=example.com/emailAddress=youremail@anymail.com"
+
+# 2.- Strip out the passphrase within the key
+openssl rsa -in /usr/local/tls/client-key.pem -out /usr/local/tls/client-key.pem
+
+# 3.- Generate the client's certificate via the x509 protocol from the cert request plus the client's key with a serial number.
+openssl x509 -req -in /usr/local/tls/client-req.pem -days 730 -CA /usr/local/tls/ca-cert.pem -CAkey /usr/local/tls/ca-key.pem -set_serial 01 -out /usr/local/tls/client-cert.pem
+
+echo "Client's certificate and key pair have been generated."
+
+# Check the integrity of the final certificate's with the CA's primary certificate
+echo "Verifying the final certificates for the client and server are intact derivatives from the CA's certificate"
+openssl verify -CAfile /usr/local/tls/ca-cert.pem /usr/local/tls/server-cert.pem /usr/local/tls/client-cert.pem
+
+echo "If the check response was a pair of OKs, you're done. If otherwise check what went wrong and start it all over again."
+
+echo "To cancel the operation at this time press Ctrl C. Otherwise wait 15 seconds for the script to resume."
+
+sleep 15
+
+# Message for the user resuming the progress
+echo "Nextcloud install starts now"
 
 # Change the default pkg repository from quarterly to latest
 sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
@@ -48,8 +105,8 @@ pkg install -y mysql80-server
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.4 and its 'funny' dependencies
-pkg install -y php74 php74-mysqli php74-extensions
+# Install PHP 8.1 and its 'funny' dependencies
+pkg install -y php81 php81-mysqli php81-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
@@ -90,14 +147,11 @@ echo "
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
-# Install GNU Sed
-pkg install -y gsed
-
 # Configure PHP-FPM to use a UNIX socket instead of a TCP one
 # This configuration is better for standalone boxes
-gsed -i 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
 # Fire up the services
 service apache24 start
@@ -136,30 +190,7 @@ expect eof
 
 echo "$SECURE_MYSQL"
 
-# Enable TLS connections with a self signed certificate. 
-# Key and certificate generation
-
-SECURE_APACHE=$(expect -c "
-set timeout 10
-spawn openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/etc/apache24/server.key -out /usr/local/etc/apache24/server.crt
-expect \"Country Name (2 letter code) \[AU\]:\"
-send \"ES\r\"
-expect \"State or Province Name (full name) \[Some-State\]:\"
-send \"Barcelona\r\"
-expect \"Locality Name (eg, city) \[\]:\"
-send \"Terrassa\r\"
-expect \"Organization Name (eg, company) \[Internet Widgits Pty Ltd\]:\"
-send \"Adminbyaccident.com\r\"
-expect \"Organizational Unit Name (eg, section) \[\]:\"
-send \"Operations\r\"
-expect \"Common Name (e.g. server FQDN or YOUR name) \[\]:\"
-send \"Albert Valbuena\r\"
-expect \"Email Address \[\]:\"
-send \"thewhitereflex@gmail.com\r\"
-expect eof
-")
-
-echo "$SECURE_APACHE"
+# Enable TLS connections with a self signed certificate previosly generated. 
 
 # Because we have generated a certificate + key we will enable SSL/TLS in the server.
 # Enable TLS connections in the server.
@@ -171,6 +202,10 @@ sed -i -e '/httpd-ssl.conf/s/#Include/Include/' /usr/local/etc/apache24/httpd.co
 # Enable TLS session cache.
 sed -i -e '/mod_socache_shmcb.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
 
+# Copy the certificate and key for Apache's use
+cp /usr/local/tls/server-key.pem /usr/local/etc/apache24/server.key
+cp /usr/local/tls/server-cert.pem /usr/local/etc/apache24/server.crt
+
 # Enable the rewrite module
 sed -i -e '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
 
@@ -178,20 +213,37 @@ sed -i -e '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/ht
 service apache24 restart
 
 # Configure PHP (already installed by the previous FAMP script) to use 512M instead of the default 128M
-gsed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/etc/php.ini
+sed -i -e 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/etc/php.ini
 
 # Install specific PHP dependencies for Nextcloud
-pkg install -y php74-zip php74-mbstring php74-gd php74-zlib php74-curl php74-openssl php74-pdo_mysql php74-pecl-imagick php74-intl php74-bcmath php74-gmp php74-fileinfo
+pkg install -y php81-zip php81-mbstring php81-gd php81-zlib php81-curl php81-pdo_mysql php81-pecl-imagick php81-intl php81-bcmath php81-gmp php81-fileinfo
+
+# Configure OPCache for PHP
+sed -i -e '/opcache.enable/s/;opcache.enable=1/opcache.enable=1/' /usr/local/etc/php.ini
+
+sed -i -e '/opcache.memory_consumption/s/;opcache.memory_consumption=128/opcache.memory_consumption=128/' /usr/local/etc/php.ini
+
+sed -i -e '/opcache.interned_strings_buffer/s/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=8/' /usr/local/etc/php.ini
+
+sed -i -e '/opcache.max_accelerated_files/s/;opcache.max_accelerated_files=4000/opcache.max_accelerated_files=4000/' /usr/local/etc/php.ini
+
+sed -i -e '/opcache.revalidate_freq/s/;opcache.revalidate_freq=60/opcache.revalidate_freq=60/' /usr/local/etc/php.ini
+
+sed -i -e '/opcache.fast_shutdown/s/;opcache.fast_shutdown=1/opcache.fast_shutdown=1/' /usr/local/etc/php.ini
+
+sed -i -e '/opcache.enable_cli/s/;opcache.enable_cli=1/opcache.enable_cli=1/' /usr/local/etc/php.ini
+
+echo "Opcache has been configured"
 
 # Restart the PHP-FPM service so it acknowledges the recently installed PHP packages
 service php-fpm restart
 
 # Install Nextcloud
 # Fetch Nextcloud
-fetch -o /usr/local/www/nextcloud-21.0.2.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.2.zip
+fetch -o /usr/local/www https://download.nextcloud.com/server/releases/nextcloud-24.0.3.zip
 
 # Unzip Nextcloud
-unzip -d /usr/local/www/ /usr/local/www/nextcloud-21.0.2.zip
+unzip -d /usr/local/www/ /usr/local/www/nextcloud-24.0.3.zip
 
 # Change the ownership so the Apache user (www) owns it
 chown -R www:www /usr/local/www/nextcloud
@@ -209,7 +261,7 @@ AcceptPathInfo On
 </Directory>" >> /usr/local/etc/apache24/httpd.conf
 
 # Enable VirtualHost
-gsed -i 's/#Include etc\/apache24\/extra\/httpd-vhosts.conf/Include etc\/apache24\/extra\/httpd-vhosts.conf/g' /usr/local/etc/apache24/httpd.conf
+sed -i -e 's/#Include etc\/apache24\/extra\/httpd-vhosts.conf/Include etc\/apache24\/extra\/httpd-vhosts.conf/g' /usr/local/etc/apache24/httpd.conf
 
 # Remove the old existing VirtualHost configuration (there's always a sample available)
 rm /usr/local/etc/apache24/extra/httpd-vhosts.conf
@@ -221,11 +273,9 @@ touch /usr/local/etc/apache24/extra/httpd-vhosts.conf
 # Set a VirtualHost configuration for Nextcloud
 # Mind there is no configuration for port 80.
 echo "
-
 # Virtual Hosts
 #
 # Required modules: mod_log_config
-
 # If you want to maintain multiple domains/hostnames on your
 # machine you can setup VirtualHost containers for them. Most configurations
 # use only name-based virtual hosts so the server doesn't need to worry about
@@ -237,14 +287,12 @@ echo "
 #
 # You may use the command line option '-S' to verify your virtual host
 # configuration.
-
 #
 # VirtualHost example:
 # Almost any Apache directive may go into a VirtualHost container.
 # The first VirtualHost section is used for all requests that do not
 # match a ServerName or ServerAlias in any <VirtualHost> block.
 #
-
 <VirtualHost *:80>
     ServerName Nextcloud
     ServerAlias Nextcloud
@@ -256,7 +304,6 @@ echo "
     RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]
     Protocols h2 h2c http/1.1
 </VirtualHost>
-
 <VirtualHost *:443>
     ServerName Nextcloud
     ServerAlias Nextcloud
@@ -281,17 +328,13 @@ touch /usr/local/etc/apache24/extra/nextcloud-security.conf
 
 echo "
 <IfModule mod_rewrite.c>
-
 RewriteEngine on
-
 # Condition to block suspicious request methods.
 RewriteCond %{REQUEST_METHOD} ^(HEAD|TRACE|DELETE|TRACK|DEBUG) [NC,OR]
-
 # Condition to block the specified user agents from programs and bots.
 RewriteCond %{HTTP_USER_AGENT} (havij|libwww-perl|wget|python|nikto|curl|scan|java|winhttp|clshttp|loader|fetch) [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} (%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} (;|<|>|'|\"|\)|\(|%0A|%0D|%22|%27|%28|%3C|%3E|%00).*(libwww-perl|wget|python|nikto|curl|scan|java|winhttp|HTTrack|clshttp|archiver|loader|email|harvest|extract|grab|miner) [NC,OR]
-
 # Condition to block suspicious header requests.
 RewriteCond %{HTTP_ACCEPT} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP_COOKIE} (localhost|loopback|127\.0\.0\.1) [NC,OR]
@@ -299,7 +342,6 @@ RewriteCond %{HTTP_FORWARDED} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP_HOST} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP_PROXY_CONNECTION} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP_REFERER} (localhost|loopback|127\.0\.0\.1) [NC,OR]
-
 # Condition to block Proxy/LoadBalancer/WAF bypass
 RewriteCond %{HTTP:X-Client-IP} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP:X-Forwarded-For} (localhost|loopback|127\.0\.0\.1) [NC,OR]
@@ -310,39 +352,29 @@ RewriteCond %{HTTP:X-Originating-IP} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP:X-Forwarded-From} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP:X-Forwarded-Host} (localhost|loopback|127\.0\.0\.1) [NC,OR]
 RewriteCond %{HTTP:X-Remote-Addr} (localhost|loopback|127\.0\.0\.1) [NC,OR]
-
 # Condition to block requests that incorporate the specified expressions in them. Avoid injection.
 RewriteCond %{THE_REQUEST} (\?|\*|%2a)+(%20+|\\s+|%20+\\s+|\\s+%20+|\\s+%20+\\s+)(http|https)(:/|/) [NC,OR]
-
 # Condition to block any request containing the etc/passwd string and avoid system passwords exfiltration.
 RewriteCond %{THE_REQUEST} etc/passwd [NC,OR]
-
 # Condition to block the execution of CGI programs.
 RewriteCond %{THE_REQUEST} cgi-bin [NC,OR]
-
 # Condition to block requests that jump into the next line. Avoid injection.
 RewriteCond %{THE_REQUEST} (%0A|%0D|\\r|\\n) [NC,OR]
-
 # Condition to block any Sharepoint services call.
 RewriteCond %{REQUEST_URI} owssvr\.dll [NC,OR]
-
 # Condition to block requests that simulate to come from the specified expressions. Avoid injection.
 RewriteCond %{HTTP_REFERER} (%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
 RewriteCond %{HTTP_REFERER} \.opendirviewer\. [NC,OR]
 RewriteCond %{HTTP_REFERER} users\.skynet\.be.* [NC,OR]
-
 # Condition to block requests that incorporate the specified expressions in them.
 RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=(http|https):// [NC,OR]
 RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=(\.\.//?)+ [NC,OR]
 RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=/([a-z0-9_.]//?)+ [NC,OR]
-
 # Condition to block any PHP execution. Avoid injection.
 RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC,OR]
 RewriteCond %{QUERY_STRING} (\.\./|%2e%2e%2f|%2e%2e/|\.\.%2f|%2e\.%2f|%2e\./|\.%2e%2f|\.%2e/) [NC,OR]
-
 # Condition to block FTP usage. Avoid uploads.
 RewriteCond %{QUERY_STRING} ftp\: [NC,OR]
-
 # Condition to block any requests jumping over paths or injecting/retrieving objects.
 RewriteCond %{QUERY_STRING} (http|https)\: [NC,OR]
 RewriteCond %{QUERY_STRING} \=\|w\| [NC,OR]
@@ -356,31 +388,23 @@ RewriteCond %{QUERY_STRING} (\<|%3C).*object.*(\>|%3E) [NC,OR]
 RewriteCond %{QUERY_STRING} (<|%3C)([^o]*o)+bject.*(>|%3E) [NC,OR]
 RewriteCond %{QUERY_STRING} (\<|%3C).*iframe.*(\>|%3E) [NC,OR]
 RewriteCond %{QUERY_STRING} (<|%3C)([^i]*i)+frame.*(>|%3E) [NC,OR]
-
 # Condition to block with the intention to en/de-code strings in base64
 RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [NC,OR]
 RewriteCond %{QUERY_STRING} base64_(en|de)code[^(]*\([^)]*\) [NC,OR]
-
 # Condition to block
 RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
 RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
-
 # Condition to block requests that incorporate the specified expressions in them. Avoid injection.
 RewriteCond %{QUERY_STRING} ^.*(\(|\)|<|>|%3c|%3e).* [NC,OR]
 RewriteCond %{QUERY_STRING} ^.*(\x00|\x04|\x08|\x0d|\x1b|\x20|\x3c|\x3e|\x7f).* [NC,OR]
-
 # Condition to block requests which declare the specified values in the string query. Avoid injection.
 RewriteCond %{QUERY_STRING} (NULL|OUTFILE|LOAD_FILE) [OR]
-
 # Condition to block requests intending to retrieve or inject content in the motd file or /etc and /bin directories.
 RewriteCond %{QUERY_STRING} (\.{1,}/)+(motd|etc|bin) [NC,OR]
-
 # Condition to block any string referencing to the host or loopback interface.
 RewriteCond %{QUERY_STRING} (localhost|loopback|127\.0\.0\.1) [NC,OR]
-
 # Condition to block requests that incorporate the specified expressions in them. Avoid injection.
 RewriteCond %{QUERY_STRING} (<|>|'|%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
-
 # Condition to block SQL injection attacks 
 RewriteCond %{QUERY_STRING} concat[^\(]*\( [NC,OR]
 RewriteCond %{QUERY_STRING} union([^s]*s)+elect [NC,OR]
@@ -388,10 +412,8 @@ RewriteCond %{QUERY_STRING} union([^a]*a)+ll([^s]*s)+elect [NC,OR]
 RewriteCond %{QUERY_STRING} \-[sdcr].*(allow_url_include|allow_url_fopen|safe_mode|disable_functions|auto_prepend_file) [NC,OR]
 RewriteCond %{QUERY_STRING} (;|<|>|'|\"|\)|%0A|%0D|%22|%27|%3C|%3E|%00).*(/\*|union|select|insert|drop|delete|update|cast|create|char|convert|alter|declare|order|script|set|md5|benchmark|encode) [NC,OR]
 RewriteCond %{QUERY_STRING} (sp_executesql) [NC]
-
 # The rewrite rule itself. Any match gets blocked.
 RewriteRule ^(.*)$ - [F]
-
 </IfModule>
 " >> /usr/local/etc/apache24/extra/nextcloud-security.conf
 
@@ -438,9 +460,9 @@ NEXTCLOUD_PWD=$(pwgen 32 --secure --numerals --capitalize) && export NEXTCLOUD_P
 su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:install --database "mysql" --database-name "$NEW_DB_NAME" --database-user "$NEW_DB_USER_NAME" --database-pass "$NEW_DB_PASSWORD" --admin-user "$NEXTCLOUD_USER" --admin-pass "$NEXTCLOUD_PWD"'
 
 # Add your ip or domain name as a trusted domain for Nextcloud. Remember to adapt this to your needs. Otherwise a warning message will appear in your screen.
-# This setup doesn't use a domain name, it's ready to be used with an IP. Adjust the NIC name 'em0' here as convenient.
+# This setup doesn't use a domain name, it's ready to be used with an IP. Adjust the NIC name with 'em0' or similar here if it's convenient.
 
-TRUSTED_DOMAIN=$(ifconfig em0 | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
+TRUSTED_DOMAIN=$(ifconfig | grep "inet " | awk '{ print $2; exit }') && export TRUSTED_DOMAIN && echo $TRUSTED_DOMAIN >> /root/trusted_domain.txt
 
 su -m www -c 'php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value="$TRUSTED_DOMAIN"'
 
@@ -463,6 +485,9 @@ echo "Your NEW_DB_PASSWORD is written on this file /root/newdb_pwd.txt"
 # Display the automatically generated username and password for Nextcloud
 echo "Your Nextcloud username is written on this file /root/nextcloud_user.txt"
 echo "Your Nextcloud password is written on this file /root/nextcloud_pwd.txt"
+
+# Browser usage message
+echo "If visiting your new Nextcloud server with your browser you see a certificate error please try with another browser and see if it works there."
 
 ## References:
 ## https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
