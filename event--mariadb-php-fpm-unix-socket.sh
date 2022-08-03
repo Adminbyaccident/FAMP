@@ -79,14 +79,11 @@ echo "
 # Set the PHP's default configuration
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
-# Install GNU Sed
-pkg install -y gsed
-
 # Configure PHP-FPM to use a UNIX socket instead of a TCP one
 # This configuration is better for standalone boxes
-gsed -i 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
-gsed -i 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
 # Install MariaDB
 echo "Installing MariaDB"
