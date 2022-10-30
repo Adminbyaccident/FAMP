@@ -40,7 +40,7 @@ pkg install -y apache24
 # Add service to be fired up at boot time
 sysrc apache24_enable="YES"
 
-# Install PHP 7.4 and its 'funny' dependencies
+# Install PHP 8.1 and its 'funny' dependencies
 pkg install -y php81 php81-mysqli php81-extensions
 
 # Set a ServerName directive in Apache HTTP. Place a name to your server.
