@@ -281,7 +281,7 @@ sed -i -e 's/sqlusername/'"$USER_NAME"'/g' /tmp/drupal-9.4.8/sites/default/setti
 
 # Add the db password into the settings.php file
 PASSWORD=$(cat /root/newdb_pwd.txt) && export PASSWORD
-sed -i -e 's/sqlpassword_here/'"$PASSWORD"'/g' /tmp/drupal-9.4.8/sites/default/settings.php
+sed -i -e 's/sqlpassword/'"$PASSWORD"'/g' /tmp/drupal-9.4.8/sites/default/settings.php
 
 # Move the content of the Drupal 9 directory into the DocumentRoot path
 cp -r /tmp/drupal-9.4.8/ /usr/local/www/apache24/data
