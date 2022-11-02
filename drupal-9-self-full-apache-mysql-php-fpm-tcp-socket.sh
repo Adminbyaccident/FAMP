@@ -37,10 +37,11 @@
 # Certificate is self signed
 # Change ServerName, DB name, usernames, etc to your needs.
 
-echo 'This script will place configuration directives in specific places (line numbers). Be aware that running this script multiples times those configurations will be added in the files again and again'
+echo 'This script will place configuration directives in specific places (line numbers).'
+echo 'Be aware that running this script multiples times those configurations will be added in the files repeatedly, which may cause issues.'
 echo 'To halt the execution of this script press Ctrl + C'
 
-sleep 15
+sleep 30
 
 # Change the default pkg repository from quarterly to latest
 sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
