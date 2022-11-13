@@ -17,7 +17,7 @@ sed -ip 's/quarterly/latest/g' /etc/pkg/FreeBSD.conf
 pkg upgrade -y
 
 # Install the Certbot utility for Apache HTTP
-pkg install -y py37-certbot py37-certbot-apache
+pkg install -y py39-certbot py39-certbot-apache
 
 # Enable SSL/TLS in Apache HTTP
 sed -i -e '/mod_ssl.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
