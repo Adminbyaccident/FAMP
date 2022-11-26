@@ -276,10 +276,10 @@ sed -i -e "278s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/h
 service apache24 restart
 
 # Fetch Wordpress from the official site
-fetch https://wordpress.org/latest.tar.gz
+fetch -o /root https://wordpress.org/latest.tar.gz
 
 # Unpack Wordpress
-tar -zxvf latest.tar.gz
+tar -zxf /root/latest.tar.gz -C /root
 
 # Create the main config file from the sample
 cp /root/wordpress/wp-config-sample.php /root/wordpress/wp-config.php
