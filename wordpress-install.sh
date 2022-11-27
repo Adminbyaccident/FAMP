@@ -116,7 +116,7 @@ service apache24 restart
 fetch -o /root https://wordpress.org/latest.tar.gz
 
 # Unpack Wordpress
-tar -zxvf latest.tar.gz
+tar -zxf /root/latest.tar.gz -C /root
 
 # Create the main config file from the sample
 cp /root/wordpress/wp-config-sample.php /root/wordpress/wp-config.php
