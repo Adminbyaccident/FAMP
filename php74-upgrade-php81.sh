@@ -25,7 +25,46 @@
 
 # Install PHP 8.1. This will automatically remove any PHP 7.4 packages.
 
-pkg install -y php81 php81-bcmath php81-brotli php81-bz2 php81-ctype php81-curl php81-dom php81-exif php81-extensions php81-fileinfo php81-filter php81-gd php81-iconv php81-intl php81-mbstring php81-mysqli php81-opcache php81-pdo php81-pdo_mysql php81-pdo_sqlite php81-pecl-imagick php81-pecl-mcrypt php81-pecl-memcache php81-pecl-memcached php81-pecl-redis php81-phar php81-posix php81-readline php81-session php81-simplexml php81-soap php81-sockets php81-sqlite3 php81-tidy php81-tokenizer php81-xml php81-xmlreader php81-xmlwriter php81-zip php81-zlib
+pkg install -y php81\
+				php81-bcmath\
+				php81-brotli\
+				php81-bz2\
+				php81-ctype\
+				php81-curl\
+				php81-dom\
+				php81-exif\
+				php81-extensions\
+				php81-fileinfo\
+				php81-filter\
+				php81-gd\
+				php81-iconv\
+				php81-intl\
+				php81-mbstring\
+				php81-mysqli\
+				php81-opcache\
+				php81-pdo\
+				php81-pdo_mysql\
+				php81-pdo_sqlite\
+				php81-pecl-imagick\
+				php81-pecl-mcrypt\
+				php81-pecl-memcache\
+				php81-pecl-memcached\
+				php81-pecl-redis\
+				php81-phar\
+				php81-posix\
+				php81-readline\
+				php81-session\
+				php81-simplexml\
+				php81-soap\
+				php81-sockets\
+				php81-sqlite3\
+				php81-tidy\
+				php81-tokenizer\
+				php81-xml\
+				php81-xmlreader\
+				php81-xmlwriter\
+				php81-zip\
+				php81-zlib
 
 # Restart PHP-FPM service for these changes to be applied
 service php-fpm restart
