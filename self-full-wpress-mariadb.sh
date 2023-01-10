@@ -265,7 +265,7 @@ echo "$NEW_DATABASE"
 pkg install -y php81-bz2 php81-curl php81-gd php81-mbstring php81-pecl-mcrypt php81-pdo_mysql php81-zip php81-zlib
 
 # Because Wordpress and plugins will make use of an .htaccess file, let's enable it.
-sed -i -e "278s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
+sed -i -e "279s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
 
 # Restart Apache HTTP so changes take effect
 service apache24 restart
