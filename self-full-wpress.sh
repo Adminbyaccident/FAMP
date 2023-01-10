@@ -14,9 +14,9 @@
 # PURPOSE: This script installs a FAMP stack with a WordPress install on top + self signed certificates
 #
 # REV LIST:
-# DATE: 12-12-2021
+# DATE: 10-01-2023
 # BY: ALBERT VALBUENA
-# MODIFICATION: 12-12-2021
+# MODIFICATION: 10-01-2023
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -28,7 +28,7 @@
 ##########################################################
 
 # This is a full Wordpress install on:
-# FreeBSD 12 + Apache 2.4 latest pkg + MySQL 8 + PHP 7.4
+# FreeBSD 12 + Apache 2.4 latest pkg + MySQL 8 + PHP 8.2
 # Apache HTTP is set on MPM Event and PHP-FPM
 # Certificate is self signed
 # Change ServerName, DB name, usernames, etc to your needs.
@@ -52,8 +52,8 @@ pkg install -y mysql80-server
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
 
-# Install PHP 7.4 and its 'funny' dependencies
-pkg install -y php74 php74-mysqli php74-extensions
+# Install PHP 8.2 and its 'funny' dependencies
+pkg install -y php82 php82-mysqli php82-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
@@ -267,10 +267,10 @@ expect eof
 echo "$NEW_DATABASE"
 
 # Install the missing PHP packages
-pkg install -y php74-bz2 php74-curl php74-gd php74-mbstring php74-pecl-mcrypt php74-openssl php74-pdo_mysql php74-zip php74-zlib
+pkg install -y php82-bz2 php82-curl php82-gd php82-mbstring php82-pecl-mcrypt php82-openssl php82-pdo_mysql php82-zip php82-zlib
 
 # Because Wordpress and plugins will make use of an .htaccess file, let's enable it.
-sed -i -e "278s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
+sed -i -e "279s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
 
 # Restart Apache HTTP so changes take effect
 service apache24 restart
