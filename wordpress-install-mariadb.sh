@@ -109,7 +109,7 @@ service php-fpm restart
 echo "PHP 8.1 is now installed. Moving on."
 
 # Because Wordpress and plugins will make use of an .htaccess file, let's enable it.
-sed -i -e "278s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
+sed -i -e "279s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
 
 # Enable the rewrite module in Apache.
 sed -i -e '/mod_rewrite.so/s/#LoadModule/LoadModule/' /usr/local/etc/apache24/httpd.conf
