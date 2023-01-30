@@ -252,7 +252,7 @@ expect eof
 echo "$NEW_DATABASE"
 
 # Install the missing PHP packages
-pkg install -y php81-gd php81-mbstring php81-pdo_mysql
+pkg install -y php82-gd php82-mbstring php82-pdo_mysql
 
 # Enable the use of .htaccess.
 sed -i '' -e '279s/AllowOverride None/AllowOverride All/g' /usr/local/etc/apache24/httpd.conf
@@ -263,35 +263,35 @@ service apache24 restart
 echo 'The FAMP stack is ready to install Drupal 9 on this box'
 
 # Fetch Drupal 9 from the official site
-fetch -o /tmp https://ftp.drupal.org/files/projects/drupal-9.4.8.tar.gz
+fetch -o /tmp https://ftp.drupal.org/files/projects/drupal-9.5.0.tar.gz
 
 # Unpack Drupal 9
-tar -zxf /tmp/drupal-9.4.8.tar.gz -C /tmp
+tar -zxf /tmp/drupal-9.5.0.tar.gz -C /tmp
 
 # Create the main config file from the sample
-cp /tmp/drupal-9.4.8/sites/default/default.settings.php /tmp/drupal-9.4.8/sites/default/settings.php
+cp /tmp/drupal-9.5.0/sites/default/default.settings.php /tmp/drupal-9.5.0/sites/default/settings.php
 
 # Add the database name into the settings.php file
 NEW_DB=$(cat /root/new_db_name.txt) && export NEW_DB
-sed -i -e 's/databasename/'"$NEW_DB"'/g' /tmp/drupal-9.4.8/sites/default/settings.php
+sed -i -e 's/databasename/'"$NEW_DB"'/g' /tmp/drupal-9.5.0/sites/default/settings.php
 
 # Add the username into the settings.php file
 USER_NAME=$(cat /root/new_db_user_name.txt) && export USER_NAME
-sed -i -e 's/sqlusername/'"$USER_NAME"'/g' /tmp/drupal-9.4.8/sites/default/settings.php
+sed -i -e 's/sqlusername/'"$USER_NAME"'/g' /tmp/drupal-9.5.0/sites/default/settings.php
 
 # Add the db password into the settings.php file
 PASSWORD=$(cat /root/newdb_pwd.txt) && export PASSWORD
-sed -i -e 's/sqlpassword/'"$PASSWORD"'/g' /tmp/drupal-9.4.8/sites/default/settings.php
+sed -i -e 's/sqlpassword/'"$PASSWORD"'/g' /tmp/drupal-9.5.0/sites/default/settings.php
 
 ## Add the host parameter where MariaDB is running to the Drupal's settings.php configuration file. If not added it won't accept connections when installing.
-sed -i '' -e '83s/localhost/127.0.0.1/g' /tmp/drupal-9.4.8/sites/default/settings.php
+sed -i '' -e '83s/localhost/127.0.0.1/g' /tmp/drupal-9.5.0/sites/default/settings.php
 
 ## Add the UNIX socket path 
 sed -i '' -e '88i\
- *   '\'unix_socket\'\ \=\>\ \'/var\/run\/mysql\/mysql.sock\', /tmp/drupal-9.4.8/sites/default/settings.php
+ *   '\'unix_socket\'\ \=\>\ \'/var\/run\/mysql\/mysql.sock\', /tmp/drupal-9.5.0/sites/default/settings.php
  
 # Move the content of the Drupal 9 directory into the DocumentRoot path
-cp -r /tmp/drupal-9.4.8/ /usr/local/www/apache24/data
+cp -r /tmp/drupal-9.5.0/ /usr/local/www/apache24/data
 
 
 # Change the ownership of the DocumentRoot path content from root to the Apache HTTP user (named www)
