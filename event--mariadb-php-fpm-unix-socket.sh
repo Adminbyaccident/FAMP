@@ -14,9 +14,9 @@
 # PURPOSE: This script installs a full FAMP stack with Apache HTTP configured with MPM as Event + MariaDB + PHP-FPM configured to read from the UNIX socket
 #
 # REV LIST:
-# DATE: 01-08-2022
+# DATE: 30-01-2023
 # BY: ALBERT VALBUENA
-# MODIFICATION: 01-08-2022
+# MODIFICATION: 30-01-2023
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
