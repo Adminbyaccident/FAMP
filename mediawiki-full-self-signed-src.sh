@@ -14,9 +14,9 @@
 # PURPOSE: This script installs MediaWiki from the originon top of a FAMP stack reading on UNIX socket
 #
 # REV LIST:
-# DATE: 01-08-2022
+# DATE: 30-01-2023
 # BY: ALBERT VALBUENA
-# MODIFICATION: 01-08-2022
+# MODIFICATION: 30-01-2023
 #
 #
 # set -n # Uncomment to check your syntax, without execution.
@@ -45,9 +45,10 @@ pkg install -y mysql80-server mysql80-client
 
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
+sysrc mysql_args="--bind-address=127.0.0.1"
 
-# Install PHP 8.1 and its 'funny' dependencies
-pkg install -y php81 php81-mysqli php81-extensions
+# Install PHP 8.2 and its 'funny' dependencies
+pkg install -y php82 php82-mysqli php82-extensions
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
@@ -225,7 +226,7 @@ echo "$NEW_DATABASE"
 echo "The PHP dependencies for MediaWiki are being installed."
 
 # Install the missing PHP packages for MediaWiki
-pkg install -y php81-mbstring php81-curl php81-intl php81-gd php81-fileinfo texlive-base imagemagick7
+pkg install -y php82-mbstring php82-curl php82-intl php82-gd php82-fileinfo texlive-base imagemagick7
 
 # Restart the PHP-FPM service to reload with the recenyly installed PHP packages
 service php-fpm restart
