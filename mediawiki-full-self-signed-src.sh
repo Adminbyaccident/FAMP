@@ -235,16 +235,16 @@ service php-fpm restart
 echo "MediaWiki is being downloaded and pre-configured for installation."
 
 # Download MediaWiki
-fetch -o /tmp https://releases.wikimedia.org/mediawiki/1.38/mediawiki-1.38.2.tar.gz 
+fetch -o /tmp https://releases.wikimedia.org/mediawiki/1.39/mediawiki-1.39.1.tar.gz 
 
 # Unpack the tarball
-tar -zxf /tmp/mediawiki-1.38.2.tar.gz -C /tmp
+tar -zxf /tmp/mediawiki-1.39.1.tar.gz -C /tmp
 
 # Take the MediaWiki files to its new location
-mv /tmp/mediawiki-1.38.2 /usr/local/www/
+mv /tmp/mediawiki-1.39.1 /usr/local/www/
 
 # Change the mediawiki directory name
-mv /usr/local/www/mediawiki-1.38.2 /usr/local/www/mediawiki
+mv /usr/local/www/mediawiki-1.39.1 /usr/local/www/mediawiki
 
 # Change ownership of the MediaWiki directory
 chown -R www:www /usr/local/www/mediawiki
