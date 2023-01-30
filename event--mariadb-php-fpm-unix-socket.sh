@@ -41,7 +41,7 @@ pkg install -y apache24
 sysrc apache24_enable="YES"
 
 # Install PHP 8.1 and its 'funny' dependencies
-pkg install -y php81 php81-mysqli php81-extensions
+pkg install -y php82 php82-mysqli php82-extensions
 
 # Set a ServerName directive in Apache HTTP. Place a name to your server.
 sed -i -e 's/#ServerName www.example.com:80/ServerName Famptest/g' /usr/local/etc/apache24/httpd.conf
@@ -87,10 +87,11 @@ sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
 # Install MariaDB
 echo "Installing MariaDB"
-pkg install -y mariadb105-server mariadb105-client
+pkg install -y mariadb106-server mariadb106-client
 
 # Add service to be fired up at boot time
 sysrc mysql_enable="YES"
+sysrc mysql_args="--bind-address=127.0.0.1"
 service mysql-server start
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
