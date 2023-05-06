@@ -301,9 +301,6 @@ expect eof
 
 echo "$NEW_DATABASE"
 
-# Install the missing PHP packages
-pkg install -y php82-bz2 php82-curl php82-gd php82-mbstring php82-pecl-mcrypt php82-openssl php82-pdo_mysql php82-zip php82-zlib
-
 # Because Wordpress and plugins will make use of an .htaccess file, let's enable it.
 sed -i -e "279s/AllowOverride None/AllowOverride All/" /usr/local/etc/apache24/httpd.conf
 
