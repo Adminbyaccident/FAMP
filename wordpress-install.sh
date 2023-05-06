@@ -95,7 +95,8 @@ pkg install -y	php82\
 		php82-xmlreader\
 		php82-xmlwriter\
 		php82-zip\
-		php82-zlib
+		php82-zlib\
+		php82-pecl-imagick-3.7.0_1
 
 # Load the new PHP modules
 service php-fpm restart
