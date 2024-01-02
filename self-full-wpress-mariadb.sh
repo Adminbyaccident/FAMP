@@ -88,7 +88,7 @@ pkg install -y	php82\
 		php82-xmlwriter\
 		php82-zip\
 		php82-zlib\
-		php82-pecl-imagick-3.7.0_1
+		php82-pecl-imagick
 
 # Install the 'old fashioned' Expect to automate the mysql_secure_installation part
 pkg install -y expect
