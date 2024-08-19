@@ -38,7 +38,7 @@ echo "Make sure you have set this script with the correct -subj content, such as
 
 echo "In other words, don't use this script blindly without changing the -subj content first. Press Ctrl C to cancel this operation if in need. You have 10 seconds."
 
-sleep 10
+sleep 30
 
 # Create the CA directory
 mkdir /usr/local/tls
