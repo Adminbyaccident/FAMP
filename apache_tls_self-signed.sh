@@ -41,17 +41,21 @@
 
 ####### Start of the Apache HTTP install section #######
 
-# Install Apache
-# pkg install -y apache24
+# Check if Apache HTTP (apache24) is already installed
+if pkg info -e apache24; then
+    echo "Apache HTTP is already installed. Skipping installation."
+else
+    # Install Apache
+    pkg install -y apache24
 
-# Add service to be fired up at boot time
-# sysrc apache24_enable="YES"
+    # Add service to be fired up at boot time
+    sysrc apache24_enable="YES"
 
-# Start Apache HTTP
-# service apache24 start
+    # Start Apache HTTP
+    service apache24 start
+fi
 
 ####### End of the Apache HTTP install section #######
-
 
 # 1. Key and certificate generation
 # Create a self-signed certificate and key for Apache HTTP 
