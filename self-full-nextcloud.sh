@@ -140,7 +140,7 @@ echo "
         DirectoryIndex index.php
     </IfModule>
     <FilesMatch \"\.(php)$\">
-        SetHandler proxy:unix:/tmp/php-fpm.sock|fcgi://localhost/
+        SetHandler proxy:unix:/var/run/php-fpm.sock|fcgi://localhost/
     </FilesMatch>
 </IfModule>" >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 
@@ -149,7 +149,7 @@ cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
 # Configure PHP-FPM to use a UNIX socket instead of a TCP one
 # This configuration is better for standalone boxes
-sed -i -e 's/127.0.0.1:9000/\/tmp\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
+sed -i -e 's/127.0.0.1:9000/\/var\/run\/php-fpm.sock/g' /usr/local/etc/php-fpm.d/www.conf
 sed -i -e 's/;listen.owner/listen.owner/g' /usr/local/etc/php-fpm.d/www.conf
 sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 
