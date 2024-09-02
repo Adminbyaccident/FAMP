@@ -616,6 +616,10 @@ install_php_version() {
 config_php_ini() {
 	if [ "$reconf_php_ini" -eq 1 ]; then
 		return 0
+	elif [ "$reconf_php_ini" -eq 2 ]; then
+		return 0
+	elif [ "$reconf_php_ini" -eq 3 ]; then
+		return 0
 	elif [ "$phpini_selection" -eq 1 ]; then
 		cp /usr/local/etc/php.ini-development /usr/local/etc/php.ini
 		echo "PHP.ini for development has been configured."
