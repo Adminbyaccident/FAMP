@@ -198,7 +198,7 @@ select_web_server() {
 		echo "2) NGINX"
 		read -p "Enter your choice (1 or 2): " webserver_choice
 	else
-		echo "Something went wrong with the web server identification process."
+		echo "Invalid selection for the web server."
 	fi
 }
 
@@ -226,9 +226,11 @@ select_database_server() {
 			echo "2) 10.11"
 			echo "3) 10.14"
 			read -p "Enter the corresponding number: " mariadb_version_choice
-		fi
+		else
+			echo "Invalid database selection."
+  		fi
 	else
-		echo "Something went wrong with the database server identification process."
+		echo "Invalid database selection."
 	fi
 }
 
@@ -244,7 +246,7 @@ select_php_version() {
 		echo "4) PHP 8.4"
 		read -p "Enter your choice (1, 2, 3, or 4): " php_choice
 	else
-		echo "Something went wrong with the PHP identification process."
+		echo "Invalid selection for PHP version install."
 	fi
 }
 
@@ -262,7 +264,7 @@ select_apache_mpm() {
 		echo "3) Event"
 		read -p "Enter the corresponding number: " apache_mpm_choice
 	else 
-		echo "Something went wrong with the web server identification process."
+		echo "Invalid Apache HTTP MPM processor selection."
 	fi
 }
 
@@ -277,7 +279,7 @@ select_nginx_php-fpm_socket() {
 			echo "2) TCP socket (most flexible, ideal for multiple backend servers)"
 			read -p "Enter your choice (1 or 2): " nginx_socket_choice
 	else
-		echo "Something went wrong in the web server discovery process."
+		echo "Invalid NGINX socket selection."
 	fi
 }
 
@@ -290,7 +292,7 @@ select_php_ini() {
 		echo "2) Production"
 		read -p "Enter your choice (1 or 2): " phpini_selection
 	else
-		echo "Something went wrong with the php.ini identification process."
+		echo "Invalid php.ini selection."
 	fi
 }
 
@@ -307,7 +309,7 @@ select_apache_socket() {
 		echo "2) TCP socket (most flexible, ideal for multiple backend servers)"
 		read -p "Enter your choice (1 or 2): " apache_socket_choice
 	else 
-		echo "Something went wrong with the web server identification process."
+		echo "Invalid Apache HTTP socket selection."
 	fi	
 }
 
