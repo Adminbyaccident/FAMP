@@ -676,7 +676,7 @@ config_apache_http_plus_php() {
 				sed -i -e 's/;listen.group/listen.group/g' /usr/local/etc/php-fpm.d/www.conf
 				# Start services
 				service apache24 restart
-				service php-fpm start
+				service php_fpm start
 					
 			elif [ "$apache_socket_choice" -eq 2 ]; then
 				# Configure Apache HTTP to interact with PHP-FPM using a TCP socket
@@ -691,7 +691,7 @@ config_apache_http_plus_php() {
 				</IfModule>" >> /usr/local/etc/apache24/modules.d/003_php-fpm.conf
 				# Start services
 				service apache24 restart
-				service php-fpm start
+				service php_fpm start
 			else
 				echo "Invalid Apache HTTP socket selection."
 				echo "Manually review the content of the /usr/local/etc/apache24/modules.d/003_php-fpm.conf file."
