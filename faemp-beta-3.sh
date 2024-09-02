@@ -448,18 +448,14 @@ config_nginx_php-fpm() {
 			git clone https://github.com/Adminbyaccident/FEMP.git /tmp/conf
 			cp /tmp/conf/base_nginx_unix_socket.conf /usr/local/etc/nginx/nginx.conf
 			rm -r /tmp/conf
-			mkdir /usr/local/www/sites
-			touch /usr/local/www/sites/index.html
-			echo "<h1> It works as NGINX! </h1>"
+			service nginx restart
 		elif [ "$nginx_socket_choice" -eq 2 ]; then
 			mv /usr/local/etc/nginx/nginx.conf /usr/local/etc/nginx/nginx.orig
 			pkg install -y git
 			git clone https://github.com/Adminbyaccident/FEMP.git /tmp/conf
 			cp /tmp/conf/base_nginx_tcp_socket.conf /usr/local/etc/nginx/nginx.conf
 			rm -r /tmp/conf
-			mkdir /usr/local/www/sites
-			touch /usr/local/www/sites/index.html
-			echo "<h1> It works as NGINX! </h1>"
+			service nginx restart
 		else
 			echo "Something went wrong configuring NGINX."
 		fi	
