@@ -652,7 +652,7 @@ config_apache_http_plus_php() {
 			</FilesMatch>
 		</IfModule>" >> /usr/local/etc/apache24/modules.d/001_mod-php.conf
 		# Start services
-		service apache24 start
+		service apache24 restart
 	elif [ "$apache_mpm_choice" -eq 2 ]; then
 		#Install PHP extensions
 		pkg install -y php${php_version}-extensions
@@ -679,7 +679,7 @@ config_apache_http_plus_php() {
     				sed -i -e 's/;listen.mode/listen.mode/g' /usr/local/etc/php-fpm.d/www.conf
 				# Start services
 				service apache24 restart
-				service php_fpm start
+				service php_fpm restart
 					
 			elif [ "$apache_socket_choice" -eq 2 ]; then
 				# Configure Apache HTTP to interact with PHP-FPM using a TCP socket
