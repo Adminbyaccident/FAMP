@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
 # Instructions on how to use this script:
 # chmod +x SCRIPTNAME.sh
 # sudo ./SCRIPTNAME.sh
@@ -273,6 +273,8 @@ select_nginx_php-fpm_socket() {
 		return 0
 	elif [ "$nginx_installed" = true ]; then
 		return 0
+    elif [ "$webserver_choice" -eq 1 ]; then
+        return 0
 	elif [ "$webserver_choice" -eq 2 ]; then
 		    echo "Select an NGINX Socket Connection Type:"
 			echo "1) UNIX socket (ideal for standalone servers)"
