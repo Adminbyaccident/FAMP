@@ -224,7 +224,7 @@ select_database_server() {
 			echo "0) 10.5"
 			echo "1) 10.6"
 			echo "2) 10.11"
-			echo "3) 10.14"
+			echo "3) 11.4"
 			read -p "Enter the corresponding number: " mariadb_version_choice
 		else
 			echo "Invalid database selection."
@@ -470,7 +470,7 @@ config_nginx_php-fpm() {
 
 install_database_server() {
     mysql_versions=("80" "81" "84")
-    mariadb_versions=("105" "106" "1011" "1014")
+    mariadb_versions=("105" "106" "1011" "114")
 
 	if [ "$mysql_installed" = true ]; then
 		return 0
