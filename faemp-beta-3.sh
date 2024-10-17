@@ -43,7 +43,17 @@ sleep 30
 echo "Do you understand this is beta and unstable software?"
 echo "1) YES"
 echo "2) NO"
-read -p "Enter the correspondent number: " beta_choice
+while true; do
+	read -p "Enter the correspondent number: " beta_choice
+	case $beta_choice in
+	1|2)
+		break
+		;;
+	*) 
+		echo "Invalid selection. Please enter 1 or 2."
+		;;
+	esac
+done
 
 beta_question() {
 	if [ "$beta_choice" -eq 1 ]; then
@@ -158,12 +168,32 @@ select_firewall() {
         echo "Would you like to automatically configure a firewall now?"
         echo "1) YES"
         echo "2) NO"
-        read -p "Enter the corresponding number: " wants_firewall
+		while true; do		
+			read -p "Enter the corresponding number: " wants_firewall
+			case $wants_firewall in
+			1|2)
+				break
+				;;
+			*) 
+				echo "Invalid selection. Please enter 1 or 2."
+				;;
+			esac
+		done
 			if [ "$wants_firewall" -eq 1 ]; then
 				echo "This script can configure one of two basic firewall options for web server protection:"
 				echo "1) IPFW"
 				echo "2) PF"
-				read -p "Enter the corresponding number: " firewall_type_selection
+				while true; do
+					read -p "Enter the corresponding number: " firewall_type_selection
+					case  $firewall_type_selection in
+					1|2)
+						break
+						;;
+					*) 
+						echo "Invalid selection. Please enter 1 or 2."
+						;;
+					esac
+				done
 			elif [ "$wants_firewall" -eq 2 ]; then
 				echo "No firewall will be configured for you on this system."
 			else
@@ -196,9 +226,19 @@ select_web_server() {
 		echo "Select a web server to install:"
 		echo "1) Apache HTTP"
 		echo "2) NGINX"
-		read -p "Enter your choice (1 or 2): " webserver_choice
+		while true; do
+			read -p "Enter your choice (1 or 2): " webserver_choice
+			case $webserver_choice in
+			1|2)
+				break
+				;;
+			*) 
+				echo "Invalid selection. Please enter 1 or 2."
+				;;
+			esac
+		done
 	else
-		echo "Invalid selection for the web server."
+		echo "Something went wrong selecting the web server type."
 	fi
 }
 
@@ -211,26 +251,55 @@ select_database_server() {
 		echo "Select a database server to install:"
 		echo "1) MySQL"
 		echo "2) MariaDB"
-		read -p "Enter your choice (1 or 2): " db_choice
-
+		while true; do
+			read -p "Enter your choice (1 or 2): " db_choice
+			case $db_choice in
+			1|2)
+				break
+				;;
+			*) 
+				echo "Invalid selection. Please enter 1 or 2."
+				;;
+			esac
+		done
 		if [ "$db_choice" -eq 1 ]; then
 			echo "Select the MySQL version to install:"
-			echo "0) 8.0"
-			echo "1) 8.1"
+			echo "1) 8.0"
 			echo "2) 8.4"
-			read -p "Enter the corresponding number: " mysql_version_choice
+			echo "3) 9.0"
+			while true; do
+				read -p "Enter the corresponding number: " mysql_version_choice
+				case $mysql_version_choice in
+				1|2|3)
+					break
+					;;
+				*)
+					echo "Invalid selection. Please enter 1, 2, or 3."
+					;;
+				esac
+			done
 		elif [ "$db_choice" -eq 2 ]; then
 			echo "Select the MariaDB version to install:"
-			echo "0) 10.5"
-			echo "1) 10.6"
-			echo "2) 10.11"
-			echo "3) 11.4"
-			read -p "Enter the corresponding number: " mariadb_version_choice
+			echo "1) 10.5"
+			echo "2) 10.6"
+			echo "3) 10.11"
+			echo "4) 11.4"
+			while true; do
+				read -p "Enter the corresponding number: " mariadb_version_choice
+				case $mariadb_version_choice in
+				1|2|3|4)
+					break
+					;;
+				*)
+					echo "Invalid selection. Please enter 1, 2, 3 or 4."
+					;;
+				esac
+			done
 		else
-			echo "Invalid database selection."
-  		fi
+			echo "Invalid MySQL or MariaDB database selection."
+		fi
 	else
-		echo "Invalid database selection."
+		echo "Something went wrong selecting the database."
 	fi
 }
 
@@ -244,9 +313,19 @@ select_php_version() {
 		echo "2) PHP 8.2"
 		echo "3) PHP 8.3"
 		echo "4) PHP 8.4"
-		read -p "Enter your choice (1, 2, 3, or 4): " php_choice
+		while true; do
+			read -p "Enter your choice (1, 2, 3, or 4): " php_choice
+			case $php_choice in
+			1|2|3|4)
+				break
+				;;
+			*)
+				echo "Invalid selection. Please enter 1, 2, 3 or 4."
+				;;
+			esac
+		done
 	else
-		echo "Invalid selection for PHP version install."
+		echo "Something went wrong in the selection for PHP version install."
 	fi
 }
 
@@ -262,26 +341,45 @@ select_apache_mpm() {
 		echo "1) Pre-fork"
 		echo "2) Worker"
 		echo "3) Event"
-		read -p "Enter the corresponding number: " apache_mpm_choice
+		while true; do
+			read -p "Enter the corresponding number: " apache_mpm_choice
+			case $apache_mpm_choice in
+				1|2|3)
+					break
+					;;
+				*)
+					echo "Invalid selection. Please enter 1, 2, or 3."
+					;;
+			esac
+		done
 	else 
-		echo "Invalid Apache HTTP MPM processor selection."
+		echo "Something went wrong in the Apache HTTP MPM processor selection."
 	fi
 }
+
 
 select_nginx_php-fpm_socket() {
 	if [ "$apache_installed" = true ]; then
 		return 0
 	elif [ "$nginx_installed" = true ]; then
 		return 0
-    elif [ "$webserver_choice" -eq 1 ]; then
-        return 0
 	elif [ "$webserver_choice" -eq 2 ]; then
 		    echo "Select an NGINX Socket Connection Type:"
 			echo "1) UNIX socket (ideal for standalone servers)"
 			echo "2) TCP socket (most flexible, ideal for multiple backend servers)"
-			read -p "Enter your choice (1 or 2): " nginx_socket_choice
+			while true; do
+				read -p "Enter your choice (1 or 2): " nginx_socket_choice
+				case $nginx_socket_choice in
+				1|2)
+					break
+					;;
+				*)
+					echo "Invalid selection. Please enter 1 or 2."
+					;;
+				esac
+			done
 	else
-		echo "Invalid NGINX socket selection."
+		echo "Something went wrong in the NGINX socket selection."
 	fi
 }
 
@@ -292,9 +390,19 @@ select_php_ini() {
 		echo "Select a PHP.ini setting:"
 		echo "1) Development"
 		echo "2) Production"
-		read -p "Enter your choice (1 or 2): " phpini_selection
+		while true; do
+			read -p "Enter your choice (1 or 2): " phpini_selection
+			case $phpini_selection in
+			1|2)
+				break
+				;;
+			*)
+				echo "Invalid selection. Please enter 1 or 2."
+				;;
+			esac
+		done
 	else
-		echo "Invalid php.ini selection."
+		echo "Something went wrong in the php.ini selection."
 	fi
 }
 
@@ -309,9 +417,19 @@ select_apache_socket() {
 		echo "Select an Apache Socket Connection Type:"
 		echo "1) UNIX socket (ideal for standalone servers)"
 		echo "2) TCP socket (most flexible, ideal for multiple backend servers)"
-		read -p "Enter your choice (1 or 2): " apache_socket_choice
+		while true; do
+			read -p "Enter your choice (1 or 2): " apache_socket_choice
+			case $apache_socket_choice in
+			1|2)
+				break
+				;;
+			*)
+				echo "Invalid selection. Please enter 1 or 2."
+				;;
+			esac
+		done
 	else 
-		echo "Invalid Apache HTTP socket selection."
+		echo "Something went wrong in the Apache HTTP socket selection."
 	fi	
 }
 
@@ -321,15 +439,35 @@ if [ "$php_ini_exists" = true ]; then
 	echo "1) Do nothing, keep it as it is"
 	echo "2) Re-configure it as a development php.ini"
 	echo "3) Re-configure it as a production php.ini"
-	read -p "Enter your choice (1, 2, or 3): " reconf_php_ini
+	while true; do
+		read -p "Enter your choice (1, 2, or 3): " reconf_php_ini
+		case $reconf_php_ini in
+		1|2|3)
+			break
+			;;
+		*)
+			echo "Invalid selection. Please enter 1, 2, or 3."
+			;;
+		esac
+	done
 elif [ "$php_ini_exists" = false ]; then  
 	echo "A PHP.ini file does NOT exist. Do you want to configure it? Options are:"
 	echo "1) Do nothing, keep the system as is (not recommended)"
 	echo "2) Re-configure it as a development php.ini"
 	echo "3) Re-configure it as a production php.ini"
-	read -p "Enter your choice (1, 2, or 3): " reconf_php_ini
+	while true; do
+		read -p "Enter your choice (1, 2, or 3): " reconf_php_ini
+		case $reconf_php_ini in
+		1|2|3)
+			break
+			;;
+		*)
+			echo "Invalid selection. Please enter 1, 2, or 3."
+			;;
+		esac
+	done
 else
-	echo "Invalid selection for PHP.ini."
+	echo "Something went wrong with the selection for PHP.ini."
 	echo "Manually review the existance of /usr/local/etc/php.ini"
 fi
 }
@@ -436,7 +574,7 @@ install_web_server() {
 		sysrc nginx_enable="YES"
 		service nginx start
     else
-        echo "Invalid selection. No web server will be installed."
+        echo "Something went wrong installing the web server. No web server will be installed."
     fi
 }
 
@@ -471,7 +609,7 @@ config_nginx_php-fpm() {
 }
 
 install_database_server() {
-    mysql_versions=("80" "81" "84")
+    mysql_versions=("80" "84" "90")
     mariadb_versions=("105" "106" "1011" "114")
 
 	if [ "$mysql_installed" = true ]; then
@@ -482,7 +620,7 @@ install_database_server() {
         if [ "$mariadb_installed" = true ]; then
             echo "MariaDB is already installed; cannot install MySQL."
         elif [ "$mysql_installed" = false ]; then
-            selected_mysql_version=${mysql_versions[$mysql_version_choice]}
+            selected_mysql_version=${mysql_versions[$mysql_version_choice-1]}
             echo "Installing MySQL version $selected_mysql_version..."
             pkg install -y mysql${selected_mysql_version}-server
 			sysrc mysql_enable="YES"
@@ -494,7 +632,7 @@ install_database_server() {
         if [ "$mysql_installed" = true ]; then
             echo "MySQL is already installed; cannot install MariaDB."
         elif [ "$mariadb_installed" = false ]; then
-            selected_mariadb_version=${mariadb_versions[$mariadb_version_choice]}
+            selected_mariadb_version=${mariadb_versions[$mariadb_version_choice-1]}
             echo "Installing MariaDB version $selected_mariadb_version..."
             pkg install -y mariadb${selected_mariadb_version}-server
 			sysrc mysql_enable="YES"
@@ -700,7 +838,7 @@ config_apache_http_plus_php() {
 				service apache24 restart
 				service php_fpm start
 			else
-				echo "Invalid Apache HTTP socket selection."
+				echo "Something went wrong configuring PHP and Apache HTTP."
 				echo "Manually review the content of the /usr/local/etc/apache24/modules.d/003_php-fpm.conf file."
 			fi
 		
@@ -748,7 +886,8 @@ config_apache_http_plus_php() {
 				service apache24 restart
 				service php_fpm start
 			else
-				echo "Invalid Apache HTTP socket selection."
+				echo "Something went wrong configuring PHP and Apache HTTP."
+				echo "Manually review the content of the /usr/local/etc/apache24/modules.d/003_php-fpm.conf file."
 			fi
 	else
 		echo "Invalid Apache HTTP MPM and socket selection. Apache HTTP has NOT been correctly configured to run PHP nor an MPM."
