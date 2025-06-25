@@ -162,6 +162,8 @@ check_php_ini() {
 
 # Step 2: Ask for User Input
 
+# Asking for a firewall selection
+
 select_firewall() {
     if [ "$ipfw_configured" = false ] && [ "$pf_configured" = false ] && [ "$ipfilter_configured" = false ]; then
         echo "It seems there is NO firewall configured on this system."
@@ -213,6 +215,8 @@ select_firewall() {
     fi
 }
 
+# Asking to select a webserver (Apache HTTP or NGINX)
+
 select_web_server() {
 	if [ "$apache_installed" = true ]; then
 		echo "Apache HTTP is already installed."
@@ -241,6 +245,8 @@ select_web_server() {
 		echo "Something went wrong selecting the web server type."
 	fi
 }
+
+# Asking to select a DB (MariaDB or MySQL)
 
 select_database_server() {
 	if [ "$mysql_installed" = true ]; then
@@ -304,6 +310,8 @@ select_database_server() {
 	fi
 }
 
+# Asking for a PHP version
+
 select_php_version() {
 	if [ "$php_installed" = true ]; then
 		echo "PHP is already installed; no new PHP installation will be performed."
@@ -329,6 +337,8 @@ select_php_version() {
 		echo "Something went wrong in the selection for PHP version install."
 	fi
 }
+
+# Asking for Apache MPM mode
 
 select_apache_mpm() {
 	if [ "$apache_installed" = true ]; then
@@ -358,6 +368,7 @@ select_apache_mpm() {
 	fi
 }
 
+# Asking for NGINX socket type (UNIX or TCP)
 
 select_nginx_php-fpm_socket() {
 	if [ "$apache_installed" = true ]; then
@@ -383,6 +394,8 @@ select_nginx_php-fpm_socket() {
 		echo "Something went wrong in the NGINX socket selection."
 	fi
 }
+
+# Asking for PHP.ini setup (development or production)
 
 select_php_ini() {
 	if [ "$php_installed" = true ]; then
