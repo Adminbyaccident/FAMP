@@ -16,7 +16,7 @@
 # FEMP: FreeBSD, NGINX HTTP, MariaDB or MySQL, and PHP
 #
 # REV LIST:
-# DATE:
+# DATE: 25-06-2025
 # BY: ALBERT VALBUENA
 # MODIFICATION:
 #
@@ -266,7 +266,7 @@ select_database_server() {
 			echo "Select the MySQL version to install:"
 			echo "1) 8.0"
 			echo "2) 8.4"
-			echo "3) 9.0"
+			echo "3) 9.1"
 			while true; do
 				read -p "Enter the corresponding number: " mysql_version_choice
 				case $mysql_version_choice in
@@ -284,14 +284,15 @@ select_database_server() {
 			echo "2) 10.6"
 			echo "3) 10.11"
 			echo "4) 11.4"
+			echo "5) 11.8"
 			while true; do
 				read -p "Enter the corresponding number: " mariadb_version_choice
 				case $mariadb_version_choice in
-				1|2|3|4)
+				1|2|3|4|5)
 					break
 					;;
 				*)
-					echo "Invalid selection. Please enter 1, 2, 3 or 4."
+					echo "Invalid selection. Please enter 1, 2, 3, 4 or 5."
 					;;
 				esac
 			done
@@ -609,8 +610,8 @@ config_nginx_php-fpm() {
 }
 
 install_database_server() {
-    mysql_versions=("80" "84" "90")
-    mariadb_versions=("105" "106" "1011" "114")
+    mysql_versions=("80" "84" "91")
+    mariadb_versions=("105" "106" "1011" "114" "118")
 
 	if [ "$mysql_installed" = true ]; then
 		return 0
