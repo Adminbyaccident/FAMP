@@ -420,6 +420,8 @@ select_php_ini() {
 	fi
 }
 
+# Asking for Apache HTTP socket configuration (UNIX or TCP)
+
 select_apache_socket() {
 	if [ "$apache_installed" = true ]; then
 		return 0
@@ -446,6 +448,8 @@ select_apache_socket() {
 		echo "Something went wrong in the Apache HTTP socket selection."
 	fi	
 }
+
+# Asking if PHP.ini needs reconfiguration (keep as is, development or production)
 
 select_php_ini_reconf () {
 if [ "$php_ini_exists" = true ]; then  
@@ -910,7 +914,7 @@ config_apache_http_plus_php() {
 }
 
 config_php-fpm_for_nginx_socket () {
-	if [ "$apache_installed" = true ]; then
+	if [ "$webserver_choice" -eq 1 ]; then
 		return 0
 	elif [ "$nginx_installed" = true ]; then
 		return 0
