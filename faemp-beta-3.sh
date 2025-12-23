@@ -286,19 +286,18 @@ select_database_server() {
 			done
 		elif [ "$db_choice" -eq 2 ]; then
 			echo "Select the MariaDB version to install:"
-			echo "1) 10.5"
-			echo "2) 10.6"
-			echo "3) 10.11"
-			echo "4) 11.4"
-			echo "5) 11.8"
+			echo "1) 10.6"
+			echo "2) 10.11"
+			echo "3) 11.4"
+			echo "4) 11.8"
 			while true; do
 				read -p "Enter the corresponding number: " mariadb_version_choice
 				case $mariadb_version_choice in
-				1|2|3|4|5)
+				1|2|3|4)
 					break
 					;;
 				*)
-					echo "Invalid selection. Please enter 1, 2, 3, 4 or 5."
+					echo "Invalid selection. Please enter 1, 2, 3, or 4."
 					;;
 				esac
 			done
