@@ -318,10 +318,10 @@ select_php_version() {
 		return 0
 	elif [ "$php_installed" = false ]; then
 		echo "Select the PHP version to install:"
-		echo "1) PHP 8.1"
-		echo "2) PHP 8.2"
-		echo "3) PHP 8.3"
-		echo "4) PHP 8.4"
+		echo "1) PHP 8.2"
+		echo "2) PHP 8.3"
+		echo "3) PHP 8.4"
+		echo "4) PHP 8.5"
 		while true; do
 			read -p "Enter your choice (1, 2, 3, or 4): " php_choice
 			case $php_choice in
@@ -746,16 +746,16 @@ install_php_version() {
     elif [ "$php_installed" = false ]; then
         case $php_choice in
             1)
-                php_version="81"
-                ;;
-            2)
                 php_version="82"
                 ;;
+            2)
+                php_version="83"
+                ;;
 			3)
-				php_version="83"
+				php_version="84"
 				;;
 			4)
-				php_version="84"
+				php_version="85"
 				;;
             *)
                 echo "Invalid selection. No PHP will be installed."
