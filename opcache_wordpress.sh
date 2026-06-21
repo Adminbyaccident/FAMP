@@ -39,7 +39,7 @@ sed -i -e '/opcache.max_accelerated_files/s/;opcache.max_accelerated_files=4000/
 
 sed -i -e '/opcache.use_cwd/s/;opcache.use_cwd=1/opcache.use_cwd=1/' /usr/local/etc/php.ini
 
-sed -i -e '/opcache.validate_timepstatmps/s/;opcache.validate_timepstatmps=1/opcache.validate_timepstatmps=1/' /usr/local/etc/php.ini
+sed -i -e '/opcache.validate_timestatmps/s/;opcache.validate_timestatmps=1/opcache.validate_timestatmps=1/' /usr/local/etc/php.ini
 
 sed -i -e '/opcache.revalidate_freq/s/;opcache.revalidate_freq=60/opcache.revalidate_freq=60/' /usr/local/etc/php.ini
 
