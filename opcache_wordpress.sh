@@ -33,7 +33,7 @@ sed -i -e '/opcache.enable_cli/s/;opcache.enable_cli=1/opcache.enable_cli=1/' /u
 
 sed -i -e '/opcache.memory_consumption/s/;opcache.memory_consumption=128/opcache.memory_consumption=256/' /usr/local/etc/php.ini
 
-sed -i -e '/opcache.interned_strings_buffer/s/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=8/' /usr/local/etc/php.ini
+sed -i -e '/opcache.interned_strings_buffer/s/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=16/' /usr/local/etc/php.ini
 
 sed -i -e '/opcache.max_accelerated_files/s/;opcache.max_accelerated_files=4000/opcache.max_accelerated_files=10000/' /usr/local/etc/php.ini
 
@@ -45,15 +45,11 @@ sed -i -e '/opcache.revalidate_freq/s/;opcache.revalidate_freq=60/opcache.revali
 
 sed -i -e '/opcache.revalidate_path/s/;opcache.revalidate_path=0/opcache.revalidate_path=0/' /usr/local/etc/php.ini
 
-sed -i -e '/opcache.save_comments/s/;opcache.save_comments=0/opcache.save_comments=0/' /usr/local/etc/php.ini
-
-sed -i -e '/opcache.fast_shutdown/s/;opcache.fast_shutdown=1/opcache.fast_shutdown=1/' /usr/local/etc/php.ini
+sed -i -e '/opcache.save_comments/s/;opcache.save_comments=0/opcache.save_comments=1/' /usr/local/etc/php.ini
 
 sed -i -e '/opcache.enable_file_override/s/;opcache.enable_file_override=1/opcache.enable_file_override=1/' /usr/local/etc/php.ini
 
 sed -i -e '/opcache.max_file_size/s/;opcache.max_file_size=0/opcache.max_file_size=0/' /usr/local/etc/php.ini
-
-sed -i -e '/opcache.consistency_checks/s/;opcache.consistency_checks=0/opcache.consistency_checks=0/' /usr/local/etc/php.ini
 
 sed -i -e '/opcache.protect_memory/s/;opcache.protect_memory=0/opcache.protect_memory=0/' /usr/local/etc/php.ini
 
